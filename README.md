@@ -2,7 +2,8 @@
 This project is aiming to show the difference between countries and groups of countries with respect to multiple variables.
 It is also possible to correlate different variables within a country or group of countries
 
-![Worldmap in d3](doc/world.png)
+![](doc/world.png)
+![]
 
 ### The variables are:
 - Development
