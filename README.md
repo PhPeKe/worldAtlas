@@ -1,6 +1,6 @@
 ## World Atlas
 This project is aiming to show the difference between countries and groups of countries with respect to multiple variables.
-It is also possible to correlate different variables within a country or group of countries
+It is also possible to correlate different variables within a country or group of countries\n
 *The variables are:*
 - Development
   - HDI (Human Development Index)
