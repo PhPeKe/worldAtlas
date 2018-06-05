@@ -4,6 +4,8 @@
 This project is aiming to show the difference between countries and groups of countries with respect to multiple variables concerning development, politics and conflict.
 It is also possible to correlate different variables within a country or group countries and variables.
 
+A lot of countries across the globe are selling and buying weapons. The trade in weapons is one of the largest markets   world wide with a total spending of 1.7 Trillion US-Dollars in 2016. Some critical voices are raising concerns that by selling weapons the rich countries indirectly exacerbate the bad humanitarian situation in poor and underdeveloped countries. This page shall be used as tool to get more information about the connection between the weapon business and the development of countries. 
+
 ### Layout:
 **MVP**:
 
