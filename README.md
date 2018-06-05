@@ -48,7 +48,15 @@ It is also possible to correlate different variables within a country or group c
   - WGI (World governance indicators)
     - Quality of the government
     - Corruption
+
+#### Additional:
+
 ### Countries can be grouped by:
 - geographic location (e.g. continents)
 - Political situation (democracy, autocracy, etc.)
 - Development (1st, 2nd and 3rd world countries)
+
+### Variables can be grouped and averaged within their categories:
+- Weapons/armed forces
+- Development
+- politic situation
