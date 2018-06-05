@@ -7,26 +7,26 @@ It is also possible to correlate different variables within a country or group c
 ### Layout:
 **MVP**:
 
-![World-map in d3](/doc/world.PNG)
-- A map to show chosen data accross time and to select countries for comparison
+![Complete Design](doc/complete.PNG)
+
+1. A map to show chosen data accross time and to select countries for comparison
   - Dropdown selection of variables to show
 
-![Scatterplot in d3](doc/scatter.PNG)
-- A scatterplot to correlate two variables with each other within one country
+2. A Linegraph to compare variables with each other within one country over time
   - Button to enable selection on map
-  - Dropdowns for two variables to compare within one country
+  - Checkboxes for variables to compare within one country
 
-![Marimekko in d3](doc/marimekko.PNG)
-- A Marimekko-chart to compare multiple countries with each other on multiple variables
+3. A Marimekko-chart to compare multiple countries with each other on multiple variables
   - Checkbox for multiple variables
   - Button to enable selection of up to 5 countries on the map
 
-![Complete Design](doc/complete.PNG)
 **Additional:**
 - Window to group countries in
 - Combine measures
 
 ### The variables are:
+**MVP**
+
 - Development/wealth
   - HDI (Human Development Index)
     - HDI per country
@@ -41,6 +41,8 @@ It is also possible to correlate different variables within a country or group c
     - Military expenditure (% of GDP)
   - WDR (World development report)
     - Measures of war and terror
+
+**Additional**
 
 - Political situation
   - WDR (World development report 2011)
