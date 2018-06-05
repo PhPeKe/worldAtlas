@@ -1,4 +1,4 @@
-## World Atlas
+# World Atlas
 *Phillip Kersten*
 
 This project is aiming to show the difference between countries and groups of countries with respect to multiple variables concerning development, politics and conflict.
@@ -7,20 +7,21 @@ It is also possible to correlate different variables within a country or group c
 ### Layout:
 **MVP**:
 
-![World-map in d3](/doc/world.png)
+![World-map in d3](/doc/world.PNG)
 - A map to show chosen data accross time and to select countries for comparison
   - Dropdown selection of variables to show
 
-![Scatterplot in d3](doc/scatter.png)
+![Scatterplot in d3](doc/scatter.PNG)
 - A scatterplot to correlate two variables with each other within one country
   - Button to enable selection on map
   - Dropdowns for two variables to compare within one country
 
-![Marimekko in d3](doc/marimekko.png)
+![Marimekko in d3](doc/marimekko.PNG)
 - A Marimekko-chart to compare multiple countries with each other on multiple variables
   - Checkbox for multiple variables
   - Button to enable selection of up to 5 countries on the map
 
+![Complete Design](doc/complete.PNG)
 **Additional:**
 - Window to group countries in
 - Combine measures
@@ -49,7 +50,7 @@ It is also possible to correlate different variables within a country or group c
     - Quality of the government
     - Corruption
 
-#### Additional:
+## Additional:
 
 ### Countries can be grouped by:
 - geographic location (e.g. continents)
