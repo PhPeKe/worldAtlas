@@ -21,6 +21,8 @@ It is also possible to correlate different variables within a country or group c
   - Button to enable selection of up to 5 countries on the map
 
 **Additional:**
+
+4. A scatterplot to correlate variables across all countries
 - Window to group countries in
 - Combine measures
 
