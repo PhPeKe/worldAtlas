@@ -37,3 +37,18 @@ All data is aggregated by hand in excel, then saved as csv and converted to json
 - d3 simple slider
 - d3 tooltip
 - bootstrap
+
+## Functions
+**Update Map**
+- Update worldmap when data is selected
+- Also updates Scatterplot
+
+**Update Scatterplot**
+- Update when data is selected in Dropdown
+- Is also triggered when data is updated for Worldmap
+
+**Update Marimekko**
+- Update when data is chosen in checkboxes
+
+**Update all**
+- Update all charts when year is changed 
