@@ -12,6 +12,8 @@ Worldbank:
 
 All data is aggregated by hand in excel, then saved as csv and converted to json using python.
 
+JSON will be a list of countries , each country object holds all of its data. This data is wrapped in a function that returns the appropriate values given the selection variables.
+
 ## Component-diagram
 ![Component-Diagram](/doc/design.PNG)
 
@@ -51,4 +53,7 @@ All data is aggregated by hand in excel, then saved as csv and converted to json
 - Update when data is chosen in checkboxes
 
 **Update all**
-- Update all charts when year is changed 
+- Update all charts when year is changed
+
+**Return data**
+- Returns data given the selection
