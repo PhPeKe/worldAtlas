@@ -4,29 +4,23 @@
 This project is aiming to show the difference between countries and groups of countries with respect to multiple variables concerning development, politics and conflict.
 It is also possible to correlate different variables within a country or group countries and variables.
 
-A lot of countries across the globe are selling and buying weapons. The trade in weapons is one of the largest markets   world wide with a total spending of 1.7 Trillion US-Dollars in 2016. Some critical voices are raising concerns that by selling weapons the rich countries indirectly exacerbate the bad humanitarian situation in poor and underdeveloped countries. This page shall be used as tool to get more information about the connection between the weapon business and the development of countries. 
+A lot of countries across the globe are selling and buying weapons. The trade in weapons is one of the largest markets   world wide with a total spending of 1.7 Trillion US-Dollars in 2016. Some critical voices are raising concerns that by selling weapons the rich countries indirectly exacerbate the bad humanitarian situation in poor and underdeveloped countries. This page shall be used as tool to get more information about the connection between the weapon business and the development of countries.
 
 ### Layout:
-**MVP**:
 
 ![Complete Design](doc/complete.PNG)
 
 1. A map to show chosen data accross time and to select countries for comparison
   - Dropdown selection of variables to show
 
-2. A Linegraph to compare variables with each other within one country over time
-  - Button to enable selection on map
-  - Checkboxes for variables to compare within one country
+2. A scatterplot to correlate variables across all countries
+  - Window to group countries in
+  - Combine measures
 
 3. A Marimekko-chart to compare multiple countries with each other on multiple variables
   - Checkbox for multiple variables
   - Button to enable selection of up to 5 countries on the map
 
-**Additional:**
-
-4. A scatterplot to correlate variables across all countries
-- Window to group countries in
-- Combine measures
 
 ### The variables are:
 **MVP**
