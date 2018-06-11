@@ -38,14 +38,19 @@ window.onload = function() {
     console.log(gdp_pc);
     console.log(life_expectancy);
 
+    // Make countries readable for worldmap
+    countries = topojson.feature(data, data.objects.countries).features;
+
     allData = [];
     allData.push(gdp_pc);
     allData.push(life_expectancy);
     allData.push(iso);
+    allData.push(countries);
 
     aggregateData(data, allData);
 
-    countries = topojson.feature(data, data.objects.countries).features;
+    selectData(life_expectancy[0], selection)
+
 
     svg.append("g")
         .attr("class", "countries")

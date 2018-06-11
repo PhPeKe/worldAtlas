@@ -1,1 +1,1 @@
-python -m http.server 8888&
+python -i -m http.server 8888&
