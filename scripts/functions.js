@@ -11,9 +11,9 @@ function aggregateData(world, allData) {
       if(le[i].code == iso[j].alpha3) le[i].numCode = iso[j].numeric;
     }
   }
-  countries.forEach(function(d) {
-    le.forEach(function(c) {
-      if(d.id == c.numCode) {
+  countries.forEach(function(country) {
+    le.forEach(function(entry) {
+      if(country.id == entry.numCode) {
         d["values"] = c;
       }
     });
@@ -29,5 +29,9 @@ function selectData(data, selection) {
 }
 
 function color(data) {
+
+}
+
+function draw() {
 
 }
