@@ -14,7 +14,7 @@ function aggregateData(world, allData) {
   countries.forEach(function(country) {
     le.forEach(function(entry) {
       if(country.id == entry.numCode) {
-        d["values"] = c;
+        country["lifeExpectancy"] = entry;
       }
     });
   });
