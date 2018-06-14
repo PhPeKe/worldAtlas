@@ -8,20 +8,15 @@ window.onload = function() {
   var margin = {top: 0, right: 0, bottom: 0, left: 0},
       width = 960 - margin.left - margin.right,
       height = 500 - margin.top - margin.bottom,
-      selection = 1960,
+      selection = 2010,
       format = d3.format(","),
       path = d3.geoPath();
-
-  // Set function that is returning color appropriate to value
-  var color = d3.scaleThreshold()
-    .domain([10000,100000,500000,1000000,5000000,10000000,50000000,100000000,500000000,1500000000])
-    .range(["rgb(247,251,255)", "rgb(222,235,247)", "rgb(198,219,239)", "rgb(158,202,225)", "rgb(107,174,214)", "rgb(66,146,198)","rgb(33,113,181)","rgb(8,81,156)","rgb(8,48,107)","rgb(3,19,43)"]);
 
   // Set tooltip
   var tip = d3.tip()
               .attr('class', 'd3-tip')
               .offset([-10, 0])
-              .html(function(d){});
+              .html(function(d){ return "HI";});
 
 /*
     Prepare world-map
@@ -39,7 +34,7 @@ window.onload = function() {
                     .translateExtent([[0,0],[width,height]])
                     .extent([[0,0],[width,height]])
                     .on("zoom",  function () {
-                        svg.attr("transform", d3.event.transform);
+                        map.attr("transform", d3.event.transform);
                       }));
 
   // Set projection for map
@@ -49,6 +44,8 @@ window.onload = function() {
 
   // Set path for map
   var path = d3.geoPath().projection(projection);
+
+  map.call(tip);
 
   //Prepare Linegraph
   var linegraph = d3.select("div.linegraph")
@@ -61,31 +58,51 @@ window.onload = function() {
   // Load in data
   queue()
     .defer(d3.json, "data/world.json")
-    .defer(d3.csv, "data/gdp_pc.csv")
-    .defer(d3.csv, "data/life_expectancy.csv")
     .defer(d3.json, "data/iso.json")
+    .defer(d3.csv, "data/gdp_pc.csv")
+    .defer(d3.csv, "data/life_ex.csv")
+    .defer(d3.csv, "data/mil_exp.csv")
+    .defer(d3.csv, "data/arms_exp.csv")
+    .defer(d3.csv, "data/arms_imp.csv")
+    .defer(d3.csv, "data/arms_pers.csv")
     .await(ready);
 
   // Wait until data is loaded and then proceed with drawing the map and other
   // objects
-  function ready(error, data, gdp_pc, life_expectancy, iso) {
-    console.log(data)
-    console.log(gdp_pc);
-    console.log(life_expectancy);
+  function ready(error, world, iso, gdp_pc, life_exp, mil_exp, arms_exp, arms_imp, arms_pers) {
+
+    log(error,"error");
+    log(world,"world");
 
     // Make countries readable for worldmap
-    countries = topojson.feature(data, data.objects.countries).features;
+    var countries = topojson.feature(world, world.objects.countries).features;
 
     // Save all data in list to pass it to aggregateData
     allData = [];
-    allData.push(gdp_pc);
-    allData.push(life_expectancy);
     allData.push(iso);
     allData.push(countries);
+    allData.push(gdp_pc);
+    allData.push(life_exp);
+    allData.push(arms_pers);
+    allData.push(arms_exp);
+    allData.push(arms_imp);
+    allData.push(mil_exp);
 
-    aggregateData(data, allData);
+    data = aggregateData(allData);
 
-    selectData(life_expectancy[0], selection)
+    log(data, "Aggregated data");
+
+    var domain = d3.extent(data, function(d){ log (d,"d"); return d.gdp_pc.values["2010"];});
+
+    log(domain,"domain: ");
+
+    // Set function that is returning color appropriate to value
+    var color = d3.scaleLinear()
+      .domain(domain)
+      .range(['#ff0000','#00ff00']);
+
+
+    selectData(data["056"]["gdp_pc"]["values"], selection)
 
     // Append countries to world-map svg
     map.append("g")
@@ -96,7 +113,7 @@ window.onload = function() {
         .attr("d", path)
         .attr("selected","false")
         .attr("class","country")
-        //.style("fill", function(d) { return color(populationById[d.id]); })
+        .style("fill", function(d) { return color(data[d.id]["gdp_pc"]["values"]["2010"]); })
         .style('stroke', 'white')
         .style('stroke-width', 1.5)
         .style("opacity",0.8)

@@ -30,3 +30,26 @@ Aggregate data
 - Appending all data to worldmap-country-objects
 
 # 11-06
+- Combined all data with worldmap objects
+
+# 12-06
+- Combining data with worldmap to show colors
+  - Combining data with worldmap data seems a bad choice
+  - Building a large dataset with all data present
+  - Objects that have country codes (numeric) as a key
+  - Next level keys are names of data series
+  - next level keys are years
+
+# 13-06
+- Tooltip works now (prototype)
+- Writing function to return colors
+- Combining all data in one dataset:
+  - function aggregateData()
+    - Problem: only the last dataset is saved in data structure
+    - It seems like its a problem with referencing
+
+# 14-06
+- Trying to figure out the bug while loading in datasets
+- Writing color function
+- Coloring worldmap
+- Solved the bug
