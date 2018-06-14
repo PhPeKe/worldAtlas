@@ -10,13 +10,15 @@ window.onload = function() {
       height = 500 - margin.top - margin.bottom,
       selection = 2010,
       format = d3.format(","),
-      path = d3.geoPath();
+      path = d3.geoPath(),
+      selectedYear = "1960",
+      selectedSeries = "life_exp";
 
   // Set tooltip
   var tip = d3.tip()
               .attr('class', 'd3-tip')
               .offset([-10, 0])
-              .html(function(d){ return "HI";});
+              .html(function(d){ return data[d.id].name;});
 
 /*
     Prepare world-map
@@ -90,14 +92,22 @@ window.onload = function() {
 
     data = aggregateData(allData);
 
+
     log(data, "Aggregated data");
 
-    var domain = d3.extent(data, function(d){ log (d,"d"); return d.gdp_pc.values["2010"];});
+    var domainList = [];
 
-    log(domain,"domain: ");
+    for(key in data) {
+      if (isNaN(data[key][selectedSeries]["values"][selectedYear]) == false)domainList.push(data[key][selectedSeries]["values"][selectedYear]);
+    };
+
+
+    var domain = d3.extent(domainList, function(d){return d; });//return d[selectedSeries][selectedYear]});
+
+    log(domainList,"domainList: ");
 
     // Set function that is returning color appropriate to value
-    var color = d3.scaleLinear()
+    color = d3.scaleLinear()
       .domain(domain)
       .range(['#ff0000','#00ff00']);
 
@@ -113,7 +123,7 @@ window.onload = function() {
         .attr("d", path)
         .attr("selected","false")
         .attr("class","country")
-        .style("fill", function(d) { return color(data[d.id]["gdp_pc"]["values"]["2010"]); })
+        .style("fill", function(d) { return color(data[d.id][selectedSeries]["values"]["2010"]); })
         .style('stroke', 'white')
         .style('stroke-width', 1.5)
         .style("opacity",0.8)

@@ -34,7 +34,7 @@ function aggregateData(allData) {
       if(!(country.id in data)) {
         data[country.id] = {};
       }
-      data[country.id][series] = { "values" : {}};
+      data[country.id][series] = { "values" : []};
 
       dataset.forEach(function(entry) {
         if(entry.numCode == country.id) {
@@ -48,12 +48,16 @@ function aggregateData(allData) {
               var obj = {};
               obj["year"] = key;
               if(entry[key] == "..") obj["value"] = NaN;
-              else obj["value"] = +entry[key];
+              else {
+                obj["value"] = +entry[key].replace(",",".");
+              }
               data[country.id][series]["values"].push(obj);
               */
               // Save values in object
+
               if(entry[key] == "..") data[country.id][series]["values"][key] = NaN;
-              else data[country.id][series]["values"][key] = +entry[key];
+              else data[country.id][series]["values"][key] = +entry[key].replace(",",".");
+
             }
           }
         }
