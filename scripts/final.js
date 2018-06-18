@@ -5,20 +5,19 @@ window.onload = function() {
 */
 
   // Declare all necessary variables
-  var margin = {top: 0, right: 0, bottom: 0, left: 0},
-      width = 960 - margin.left - margin.right,
-      height = 500 - margin.top - margin.bottom,
-      selection = 2010,
+  var margin = {top: -20, right: 0, bottom: 20, left: 50},
+      width = 960,
+      height = 600,
       format = d3.format(","),
       path = d3.geoPath(),
-      selectedYear = "1960",
-      selectedSeries = "life_exp";
+      selectedYear = "2010",
+      selectedSeries = "mil_exp";
 
   // Set tooltip
   var tip = d3.tip()
               .attr('class', 'd3-tip')
               .offset([-10, 0])
-              .html(function(d){ return data[d.id].name;});
+              .html(function(d){ return "Name: " + data[d.id].name + "<br>" + data[d.id][selectedSeries].series+ ": <br>"+ data[d.id][selectedSeries].values[selectedYear];});
 
 /*
     Prepare world-map
@@ -52,8 +51,8 @@ window.onload = function() {
   //Prepare Linegraph
   var linegraph = d3.select("div.linegraph")
           .append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
+            .attr("width", width)
+            .attr("height", height)
           .append('g')
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -90,29 +89,27 @@ window.onload = function() {
     allData.push(arms_imp);
     allData.push(mil_exp);
 
+    // Aggregate data
     data = aggregateData(allData);
 
+    var years = [];
+
+    for (key in data["004"][selectedSeries].values) {
+      years.push(new Date (key));
+    }
+
+    log(years, "Years: ");
 
     log(data, "Aggregated data");
 
-    var domainList = [];
+    var domain = getDomain(data, selectedSeries, selectedYear);
 
-    for(key in data) {
-      if (isNaN(data[key][selectedSeries]["values"][selectedYear]) == false)domainList.push(data[key][selectedSeries]["values"][selectedYear]);
-    };
-
-
-    var domain = d3.extent(domainList, function(d){return d; });//return d[selectedSeries][selectedYear]});
-
-    log(domainList,"domainList: ");
+    log(domain,"domain: ");
 
     // Set function that is returning color appropriate to value
     color = d3.scaleLinear()
       .domain(domain)
       .range(['#ff0000','#00ff00']);
-
-
-    selectData(data["056"]["gdp_pc"]["values"], selection)
 
     // Append countries to world-map svg
     map.append("g")
@@ -123,7 +120,7 @@ window.onload = function() {
         .attr("d", path)
         .attr("selected","false")
         .attr("class","country")
-        .style("fill", function(d) { return color(data[d.id][selectedSeries]["values"]["2010"]); })
+        .style("fill", function(d) { return color(data[d.id][selectedSeries].values[selectedYear]); })
         .style('stroke', 'white')
         .style('stroke-width', 1.5)
         .style("opacity",0.8)
@@ -151,6 +148,29 @@ window.onload = function() {
         .datum(topojson.mesh(countries, function(a, b) { return a.id !== b.id; }))
          // .datum(topojson.mesh(data.features, function(a, b) { return a !== b; }))
         .attr("class", "names")
-        .attr("d", path);
+        .attr("d", path)
+
+    //Prepare x,y-scale and line
+    var x = d3.scaleTime()
+      .rangeRound([0, width]);
+    var y = d3.scaleLinear()
+      .rangeRound([height , 0]);
+    var line = d3.line()
+        .x(function(d) { return x(d.year);})
+        .y(function(d) { return y(d.value);});
+
+    //Set domains
+    x.domain(d3.extent(years, function(d) {return d.year}));
+    y.domain(domain);
+
+    //Append x,y-axis
+    linegraph.append("g")
+        .attr("class","linegraph")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
+    linegraph.append("g").transition()
+        .attr("class","linegraph")
+        .call(d3.axisLeft(y));
+
   }
 }

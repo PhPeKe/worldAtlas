@@ -13,8 +13,10 @@ function aggregateData(allData) {
   var datas = [gdp,le, mil_exp, arms_exp,arms_imp, arms_pers];
 
   var names = ["iso","countries","gdp_pc","life_exp","arms_pers","arms_exp","arms_imp","mil_exp"];
+  log(allData,"Alldata spliced before");
 
-  allData.splice(2).forEach(function(dataset) {
+  //Prepare data by giving the appropriate numeric iso-codes
+  allData.slice(2).forEach(function(dataset) {
     dataset.forEach(function(entry) {
       iso.forEach(function(i) {
         if(entry.code == i.alpha3) entry.numCode = i.numeric;
@@ -22,13 +24,9 @@ function aggregateData(allData) {
     });
   });
 
-
-  log(data,"data before");
-
-  datas.forEach(function(dataset) { //datas oder allData
+  // Iterate through all data and append the relevant information to datastructure
+  allData.slice(2).forEach(function(dataset) { //datas oder allData
     var series = (" " + dataset[0]["series_code"]).slice(1);
-    log(series, "series:");
-    log(dataset,"set");
 
     countries.forEach(function(country) {
       if(!(country.id in data)) {
@@ -64,27 +62,22 @@ function aggregateData(allData) {
       });
     });
   });
-
-  log(allData, "all data with numcodes");
-
+  // Return aggregated data
   return data;
-
-}
-
-function selectData(data, selection) {
-  log(data[selection],"Selected data: ");
-  return data[selection];
-}
-
-function color(data) {
-
-}
-
-function draw() {
-
 }
 
 function log(object, message) {
   console.log(message);
   console.log(object);
+}
+
+function getDomain(data, selectedSeries, selectedYear) {
+  // Workaround for the domainlist
+  var domainList = [];
+  for(key in data) {
+    if (isNaN(data[key][selectedSeries]["values"][selectedYear]) == false)domainList.push(data[key][selectedSeries]["values"][selectedYear]);
+  };
+
+  var domain = d3.extent(domainList, function(d){return d; });//return d[selectedSeries][selectedYear]});
+  return domain;
 }

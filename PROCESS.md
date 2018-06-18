@@ -53,3 +53,9 @@ Aggregate data
 - Writing color function
 - Coloring worldmap
 - Solved the bug
+- Problem: d3.extent expects a list not an object:
+  - copying all values to a list before
+ToDo:
+
+
+# 15-06
