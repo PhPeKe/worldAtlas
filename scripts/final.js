@@ -13,48 +13,14 @@ window.onload = function() {
       selectedYear = "2010",
       selectedSeries = "mil_exp";
 
-  // Set tooltip
-  var tip = d3.tip()
-              .attr('class', 'd3-tip')
-              .offset([-10, 0])
-              .html(function(d){ return "Name: " + data[d.id].name + "<br>" + data[d.id][selectedSeries].series+ ": <br>"+ data[d.id][selectedSeries].values[selectedYear];});
+  var tip = makeTooltip(selectedSeries, selectedYear);
 
-/*
-    Prepare world-map
-*/
+  var world = prepareWorld(width, height, tip);
 
-  // Prepare map
-  var map = d3.select("div.map")
-              .append("svg")
-                .attr("width", width)
-                .attr("height", height)
-              .append('g')
-                .attr('class', 'map')
-              .call(d3.zoom()
-                    .scaleExtent([1,Infinity])
-                    .translateExtent([[0,0],[width,height]])
-                    .extent([[0,0],[width,height]])
-                    .on("zoom",  function () {
-                        map.attr("transform", d3.event.transform);
-                      }));
+  var map = world[0],
+      path = world[1];
 
-  // Set projection for map
-  var projection = d3.geoMercator()
-                     .scale(130)
-                     .translate( [width / 2, height / 1.5]);
-
-  // Set path for map
-  var path = d3.geoPath().projection(projection);
-
-  map.call(tip);
-
-  //Prepare Linegraph
-  var linegraph = d3.select("div.linegraph")
-          .append("svg")
-            .attr("width", width)
-            .attr("height", height)
-          .append('g')
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  var linegraph = makeLinegraph(width, height, margin);
 
   // Load in data
   queue()
@@ -68,12 +34,14 @@ window.onload = function() {
     .defer(d3.csv, "data/arms_pers.csv")
     .await(ready);
 
+
   // Wait until data is loaded and then proceed with drawing the map and other
   // objects
   function ready(error, world, iso, gdp_pc, life_exp, mil_exp, arms_exp, arms_imp, arms_pers) {
-
-    log(error,"error");
-    log(world,"world");
+    if (error) {
+      alert("Data failed to load");
+      throw(error);
+    }
 
     // Make countries readable for worldmap
     var countries = topojson.feature(world, world.objects.countries).features;
@@ -90,7 +58,13 @@ window.onload = function() {
     allData.push(mil_exp);
 
     // Aggregate data
-    data = aggregateData(allData);
+    var data = aggregateData(allData);
+
+    // Get statistics and z-scores for all entrys
+    var stats = getStats(data);
+
+    log(stats, "Stats: ");
+    log(data, "data: ");
 
     var years = [];
 
@@ -98,13 +72,8 @@ window.onload = function() {
       years.push(new Date (key));
     }
 
-    log(years, "Years: ");
-
-    log(data, "Aggregated data");
-
     var domain = getDomain(data, selectedSeries, selectedYear);
 
-    log(domain,"domain: ");
 
     // Set function that is returning color appropriate to value
     color = d3.scaleLinear()
