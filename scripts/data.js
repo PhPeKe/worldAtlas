@@ -13,7 +13,6 @@ function aggregateData(allData) {
   var datas = [gdp,le, mil_exp, arms_exp,arms_imp, arms_pers];
 
   var names = ["iso","countries","gdp_pc","life_exp","arms_pers","arms_exp","arms_imp","mil_exp"];
-  log(allData,"Alldata spliced before");
 
   //Prepare data by giving the appropriate numeric iso-codes
   allData.slice(2).forEach(function(dataset) {
@@ -85,71 +84,9 @@ function getDomain(data, selectedSeries, selectedYear) {
   return domain;
 }
 
-
-function prepareWorld(width, height, tip) {
-
-    // Prepare map
-    var map = d3.select("div.map")
-                .append("svg")
-                  .attr("width", width)
-                  .attr("height", height)
-                .append('g')
-                  .attr('class', 'map')
-                .call(d3.zoom()
-                      .scaleExtent([1,Infinity])
-                      .translateExtent([[0,0],[width,height]])
-                      .extent([[0,0],[width,height]])
-                      .on("zoom",  function () {
-                          map.attr("transform", d3.event.transform);
-                        }));
-
-    // Set projection for map
-    var projection = d3.geoMercator()
-                       .scale(130)
-                       .translate( [width / 2, height / 1.5]);
-
-    // Set path for map
-    var path = d3.geoPath().projection(projection);
-
-    map.call(tip);
-
-    return [map,path];
-}
-
-
-function makeTooltip(selectedSeries, selectedYear) {
-  // Set tooltip
-  var tip = d3.tip()
-              .attr('class', 'd3-tip')
-              .offset([-10, 0])
-              .html(function(d){ return "Name: "
-                                       + data[d.id].name
-                                       + "<br>"
-                                       + data[d.id].series[selectedSeries].series
-                                       + ": <br>"
-                                       + data[d.id].series[selectedSeries].values[selectedYear];
-                                     });
-  return tip;
-}
-
-
-function makeLinegraph(width, height, margin) {
-  //Prepare Linegraph
-  var linegraph = d3.select("div.linegraph")
-          .append("svg")
-            .attr("width", width)
-            .attr("height", height)
-          .append('g')
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-  return linegraph;
-}
-
-
 function getStats(data) {
   var stats = {};
   var n = 0;
-
 
   for(series in data["004"].series) {
     // Initialize all statistics
@@ -179,9 +116,11 @@ function getStats(data) {
       // Also set minimum and maximum
       for(year in data[country].series[series].values) {
         if(!(isNaN(data[country].series[series].values[year]))) {
+
           // Per series
           stats[series].n+=1;
           stats[series].total += data[country].series[series].values[year];
+
           // Per country per series
           data[country].series[series].n += 1;
           data[country].series[series].total += data[country].series[series].values[year];
@@ -200,6 +139,7 @@ function getStats(data) {
   // Calculate mean per series
   for(series in data["004"].series) {
     stats[series].mean = stats[series].total / stats[series].n;
+
     // Reset counter
     stats[series].n = 0;
   }
@@ -237,8 +177,12 @@ function getStats(data) {
     for(series in data[country].series) {
       for(year in data[country].series[series].values) {
         if(!(isNaN(data[country].series[series].values[year]))) {
+
+          // Initialize counter variables
           if(!(n[series])) n[series] = {};
           if(!(n[series][year])) n[series][year] = 0;
+
+          // Initialize meanByYear
           if(!(stats[series].meanByYear[year])) stats[series].meanByYear[year] = 0;
           n[series][year] += 1
           stats[series].meanByYear[year] += data[country].series[series].values[year];
@@ -294,5 +238,51 @@ function getStats(data) {
     }
   }
 
+  // Get z-scores for mean values
+  for(series in stats) {
+    for(year in stats[series].meanByYear) {
+      if(!(stats[series].meanByYearZ)) stats[series].meanByYearZ = {};
+      stats[series].meanByYearZ[year] = (stats[series].meanByYear[year] - stats[series].mean)/stats[series].var;
+    }
+  }
+
   return stats;
+}
+
+function update() {
+  log("HI","HI");
+}
+
+function getLineData(data, stats, selectedYear, selectedSeries, selectedCountries) {
+  var lineData = [];
+
+  // If nothing is selected the average of the whole world is given back
+  if(selectedCountries == "world") {
+    for(key in stats[selectedSeries].meanByYear) {
+      var object = {};
+      object.year = key;
+      object.value = stats[selectedSeries].meanByYearZ[key];
+      object.seriesName = data["004"].series[selectedSeries].series;
+      object.name = "world";
+      lineData.push(object);
+    }
+    return lineData;
+  }
+
+  var lineData = {};
+  // If selection is made selected data is returned
+  selectedCountries.forEach(function(selectedCountry) {
+    var otherObject = {};
+    otherObject[selectedCountry] = [];
+    for(year in data[selectedCountry].series[selectedSeries].zscores) {
+      var object = {};
+      object.year = year;
+      object.value = data[selectedCountry].series[selectedSeries].zscores[year];
+      object.seriesName = data[selectedCountry].series[selectedSeries].series;
+      object.name = data[selectedCountry].name;
+      otherObject[selectedCountry].push(object);
+    }
+    lineData[selectedCountry] = otherObject[selectedCountry];
+  });
+  return lineData;
 }

@@ -16,9 +16,11 @@
   <script src="scripts/d3/topojson.v1.min.js"></script>
   <script src="scripts/d3/d3-simple-slider.js"></script>
   <script src="scripts/d3/d3-tip.js"></script>
+  <script src="scripts/d3/d3CheckBox.js"></script>
   <script src="scripts/d3/d3-dsv.min.js"></script>
   <script src="scripts/d3/bootstrap.min.js"></script>
-  <script src="scripts/functions.js" charset="utf-8"></script>
+  <script src="scripts/constructing.js" charset="utf-8"></script>
+  <script src="scripts/data.js" charset="utf-8"></script>
   <script src="scripts/final.js" charset="utf-8"></script>
 </head>
 <body>
@@ -29,6 +31,14 @@
   </p>
 </div>
 <div class="map"></div>
+<div class="controls" style="width: 960px">
+  <input type="checkbox" class="input_linegraph" id="life_exp" checked>Life Expectancy at birth
+  <input type="checkbox" class="input_linegraph" id="gdp_pc">GDP per Capita
+  <input type="checkbox" class="input_linegraph" id="mil_exp">Military expenditure (% of GDP)
+  <input type="checkbox" class="input_linegraph" id="arms_exp">Arms exported
+  <input type="checkbox" class="input_linegraph" id="arms_imp">Arms imported
+  <input type="checkbox" class="input_linegraph" id="arms_pers">Armed personell (% of labour force)
+</div>
 <div class="linegraph"></div>
 <div class ="info">
   <p id="info">

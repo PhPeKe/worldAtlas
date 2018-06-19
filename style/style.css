@@ -52,3 +52,20 @@ div.subtitle {
   width: 960px;
   border: 1px solid black;
 }
+
+div.controls {
+  border: 1px solid black;
+}
+
+.checkbox {
+  display: inline-block;
+  vertical-align: top;
+  padding-left: 25px;
+  position: relative;
+}
+
+.checkbox input {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
