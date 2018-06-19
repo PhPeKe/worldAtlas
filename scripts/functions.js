@@ -31,13 +31,14 @@ function aggregateData(allData) {
     countries.forEach(function(country) {
       if(!(country.id in data)) {
         data[country.id] = {};
+        data[country.id].series = {};
       }
-      data[country.id][series] = { "values" : []};
+      data[country.id].series[series] = { "values" : {}};
 
       dataset.forEach(function(entry) {
         if(entry.numCode == country.id) {
-          data[country.id][series]["series"] = entry.series;
-          data[country.id]["name"] = entry.name;
+          data[country.id].series[series]["series"] = entry.series;
+          data[country.id].name = entry.name;
 
           for(var key in entry) {
             if(key[0] == "1" || key[0] =="2") {
@@ -53,8 +54,8 @@ function aggregateData(allData) {
               */
               // Save values in object
 
-              if(entry[key] == "..") data[country.id][series]["values"][key] = NaN;
-              else data[country.id][series]["values"][key] = +entry[key].replace(",",".");
+              if(entry[key] == "..") data[country.id].series[series]["values"][key] = NaN;
+              else data[country.id].series[series]["values"][key] = +entry[key].replace(",",".");
 
             }
           }
@@ -77,7 +78,7 @@ function getDomain(data, selectedSeries, selectedYear) {
   // Workaround for the domainlist
   var domainList = [];
   for(key in data) {
-    if (isNaN(data[key][selectedSeries]["values"][selectedYear]) == false)domainList.push(data[key][selectedSeries]["values"][selectedYear]);
+    if (isNaN(data[key].series[selectedSeries]["values"][selectedYear]) == false)domainList.push(data[key].series[selectedSeries]["values"][selectedYear]);
   };
 
   var domain = d3.extent(domainList, function(d){return d; });//return d[selectedSeries][selectedYear]});
@@ -124,9 +125,9 @@ function makeTooltip(selectedSeries, selectedYear) {
               .html(function(d){ return "Name: "
                                        + data[d.id].name
                                        + "<br>"
-                                       + data[d.id][selectedSeries].series
+                                       + data[d.id].series[selectedSeries].series
                                        + ": <br>"
-                                       + data[d.id][selectedSeries].values[selectedYear];
+                                       + data[d.id].series[selectedSeries].values[selectedYear];
                                      });
   return tip;
 }
@@ -149,52 +150,146 @@ function getStats(data) {
   var stats = {};
   var n = 0;
 
+
+  for(series in data["004"].series) {
+    // Initialize all statistics
+    stats[series] = {};
+    stats[series].mean = 0;
+    stats[series].sd = 0;
+    stats[series].total = 0;
+    stats[series].n = 0;
+    stats[series].min = Infinity;
+    stats[series].max = 0;
+    stats[series].var = 0;
+    stats[series].sd = 0;
+    stats[series].meanByYear = {};
+    stats[series].varByYear = {};
+  }
+
+
+  // Get total per series
   for(country in data) {
-    stats[country] = {};
+    for(series in data[country].series) {
 
-    for(series in data[country]) {
-      stats[country][series] = {};
-      stats[country][series].total = 0;
-      n = 0;
+      // Also get mean per country
+      data[country].series[series].total = 0;
+      data[country].series[series].n = 0;
 
-      // Calculate mean
-      for(year in data[country][series].values) {
-        if(data[country][series].values[year] != NaN) {
-          var entry = data[country][series].values[year];
-          n+=1;
-          stats[country][series].total += entry;
+      // Calculate total per series and per country per series
+      // Also set minimum and maximum
+      for(year in data[country].series[series].values) {
+        if(!(isNaN(data[country].series[series].values[year]))) {
+          // Per series
+          stats[series].n+=1;
+          stats[series].total += data[country].series[series].values[year];
+          // Per country per series
+          data[country].series[series].n += 1;
+          data[country].series[series].total += data[country].series[series].values[year];
+
+          // Get minimum and maximum
+          if(data[country].series[series].values[year] > stats[series].max) stats[series].max = data[country].series[series].values[year];
+          if(data[country].series[series].values[year] < stats[series].min) stats[series].min = data[country].series[series].values[year];
         }
       }
-      stats[country][series].mean = stats[country][series].total/n;
-      log(stats[country][series].mean, "mean: ");
-      n = 0;
-      var variance = 0;
 
-      // Calculate variance
-      for(year in data[country][series].values) {
-        if(data[country][series].values[year] != NaN) {
-          var entry = data[country][series].values[year];
-          var mean = stats[country][series].mean;
-          n+=1;
-          variance += Math.abs(entry - mean);
+      // Get mean per country per series
+      data[country].series[series].mean = data[country].series[series].total/data[country].series[series].n;
+    }
+  }
+
+  // Calculate mean per series
+  for(series in data["004"].series) {
+    stats[series].mean = stats[series].total / stats[series].n;
+    // Reset counter
+    stats[series].n = 0;
+  }
+
+  // Get variance and standart deviation per series
+  for(country in data) {
+    for(series in data[country].series) {
+      n = 0;
+      for(year in data[country].series[series].values) {
+        var deviation = Math.abs(data[country].series[series].values[year] - stats[series].mean)
+        if(!(isNaN(deviation))) {
+          stats[series].var += deviation;
+          // Get total variation
+          if(!(data[country].series[series].var)) data[country].series[series].var = 0;
+          data[country].series[series].var += deviation;
+          n += 1;
+          stats[series].n += 1;
         }
       }
-      variance = variance/(n-1);
+      // Calculate variance and standart deviation per country per series
+      data[country].series[series].var /= n;
+      data[country].series[series].sd = Math.sqrt(data[country].series[series].var);
+    }
+  }
 
-      // Calculate standart deviation
-      stats[country][series].sd = Math.sqrt(variance);
+  // Calculate var and SD per series
+  for(series in data["004"].series) {
+    stats[series].var /= stats[series].n;
+    stats[series].sd = Math.sqrt(stats[series].var);
+  }
 
-      // Calculate z-score and append it to data object
-      data[country][series].z = {};
-      for(year in data[country][series].values) {
-        if(data[country][series].values[year] != NaN) {
-          var entry = data[country][series].values[year];
-          var mean = stats[country][series].mean;
-          var sd = stats[country][series].sd;
-
-          data[country][series].z[year] = (entry - mean)/sd;
-
+  // Get total per series per year
+  n = {};
+  for(country in data) {
+    for(series in data[country].series) {
+      for(year in data[country].series[series].values) {
+        if(!(isNaN(data[country].series[series].values[year]))) {
+          if(!(n[series])) n[series] = {};
+          if(!(n[series][year])) n[series][year] = 0;
+          if(!(stats[series].meanByYear[year])) stats[series].meanByYear[year] = 0;
+          n[series][year] += 1
+          stats[series].meanByYear[year] += data[country].series[series].values[year];
         }
+      }
+    }
+  }
+
+  // Get mean per series per year
+  for(series in stats) {
+    for(year in stats[series].meanByYear) {
+      stats[series].meanByYear[year] /= n[series][year];
+    }
+  }
+
+  // Get total deviation per series per year
+  n = {};
+  for(country in data) {
+    for(series in data[country].series) {
+      for(year in data[country].series[series].values) {
+        if(!(isNaN(data[country].series[series].values[year]))) {
+          if(!(n[series])) n[series] = {};
+          if(!(n[series][year])) n[series][year] = 0;
+          if(!(stats[series].varByYear[year])) stats[series].varByYear[year] = 0;
+          n[series][year] += 1
+          stats[series].varByYear[year] += Math.abs(data[country].series[series].values[year] - stats[series].meanByYear[year]);
+        }
+      }
+    }
+  }
+
+  // Get variance per series per year
+  for(series in stats) {
+    for(year in stats[series].varByYear) {
+      stats[series].varByYear[year] /= n[series][year];
+    }
+  }
+
+
+  // Get z-scores per country per series (z = (x – mean) / var)
+  // Get z-scores per series (z = (x – μ) / σ)
+  for(country in data) {
+    for(series in data[country].series) {
+      for(year in data[country].series[series].values) {
+        if(!(data[country].series[series].z)) {
+          data[country].series[series].z = (data[country].series[series].mean - stats[series].mean)/stats[series].var;
+        }
+        if(!(data[country].series[series].zscores)) {
+          data[country].series[series].zscores = {};
+        }
+        data[country].series[series].zscores[year] = (data[country].series[series].values[year] - stats[series].meanByYear[year])/stats[series].varByYear[year];
       }
     }
   }

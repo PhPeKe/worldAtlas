@@ -60,18 +60,19 @@ window.onload = function() {
     // Aggregate data
     var data = aggregateData(allData);
 
+
+
+    var years = [];
+    for (key in data["004"].series[selectedSeries].values) {
+      years.push(new Date (key));
+    }
+
     // Get statistics and z-scores for all entrys
     var stats = getStats(data);
 
     log(stats, "Stats: ");
     log(data, "data: ");
-
-    var years = [];
-
-    for (key in data["004"][selectedSeries].values) {
-      years.push(new Date (key));
-    }
-
+    
     var domain = getDomain(data, selectedSeries, selectedYear);
 
 
@@ -89,7 +90,7 @@ window.onload = function() {
         .attr("d", path)
         .attr("selected","false")
         .attr("class","country")
-        .style("fill", function(d) { return color(data[d.id][selectedSeries].values[selectedYear]); })
+        .style("fill", function(d) { return color(data[d.id].series[selectedSeries].values[selectedYear]); })
         .style('stroke', 'white')
         .style('stroke-width', 1.5)
         .style("opacity",0.8)

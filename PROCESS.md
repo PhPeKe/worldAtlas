@@ -59,3 +59,13 @@ ToDo:
 
 
 # 15-06
+
+# 18-06
+- Creating statistics per series and per country
+- Preparing Linegraph
+- outsourcing functions
+# 19-06
+- Select data for linegraph with marimekko chart
+- Select point in time displayed on worldmap with crosshair linegraph
+- Marimekko chart: Show data either per year or overall
+  - Same button for worldmap
