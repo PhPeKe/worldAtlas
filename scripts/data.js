@@ -76,7 +76,7 @@ function getDomain(data, selectedSeries, selectedYear) {
   // Workaround for the domainlist
   var domainList = [];
   for(key in data) {
-    if (isNaN(data[key].series[selectedSeries]["values"][selectedYear]) == false)domainList.push(data[key].series[selectedSeries]["values"][selectedYear]);
+    if (isNaN(data[key].series[selectedSeries].values[selectedYear]) == false)domainList.push(data[key].series[selectedSeries]["values"][selectedYear]);
   };
 
   var domain = d3.extent(domainList, function(d){return d; });//return d[selectedSeries][selectedYear]});
@@ -253,18 +253,19 @@ function update() {
   log("HI","HI");
 }
 
-function getLineData(data, stats, selectedYear, selectedSeries, selectedCountries) {
-  var lineData = [];
-
+function getLineData(data, stats, selectedSeries, selectedCountries) {
+  var lineData = {};
   // If nothing is selected the average of the whole world is given back
   if(selectedCountries == "world") {
+    lineData["world"] = [];
     for(key in stats[selectedSeries].meanByYear) {
       var object = {};
-      object.year = key;
-      object.value = stats[selectedSeries].meanByYearZ[key];
+      object.year = +key;
+      if(isNaN(stats[selectedSeries].meanByYearZ[key])) object.value = undefined;
+      else object.value = stats[selectedSeries].meanByYearZ[key];
       object.seriesName = data["004"].series[selectedSeries].series;
       object.name = "world";
-      lineData.push(object);
+      lineData["world"].push(object);
     }
     return lineData;
   }
@@ -276,8 +277,9 @@ function getLineData(data, stats, selectedYear, selectedSeries, selectedCountrie
     otherObject[selectedCountry] = [];
     for(year in data[selectedCountry].series[selectedSeries].zscores) {
       var object = {};
-      object.year = year;
-      object.value = data[selectedCountry].series[selectedSeries].zscores[year];
+      object.year = +year;
+      if(isNaN(data[selectedCountry].series[selectedSeries].zscores[year])) object.value = undefined;
+      else object.value = data[selectedCountry].series[selectedSeries].zscores[year];
       object.seriesName = data[selectedCountry].series[selectedSeries].series;
       object.name = data[selectedCountry].name;
       otherObject[selectedCountry].push(object);

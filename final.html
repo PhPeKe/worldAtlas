@@ -37,17 +37,25 @@
 </div>
 <div class="map"></div>
 <div class="controls" style="width: 960px">
-  <input type="checkbox" class="input_linegraph" id="life_exp" checked>Life Expectancy at birth
-  <br>
-  <input type="checkbox" class="input_linegraph" id="gdp_pc">GDP per Capita
-  <br>
-  <input type="checkbox" class="input_linegraph" id="mil_exp">Military expenditure (% of GDP)
-  <br>
-  <input type="checkbox" class="input_linegraph" id="arms_exp">Arms exported
-  <br>
-  <input type="checkbox" class="input_linegraph" id="arms_imp">Arms imported
-  <br>
-  <input type="checkbox" class="input_linegraph" id="arms_pers">Armed personell (% of labour force)
+  <fieldset>
+    <input class="selectYear" type="radio" id="life_exp" name="linegraph" checked = "checked">
+    <label for="life_exp"> Life Expectancy at birth</label>
+    <br>
+    <input class="selectYear" type="radio" id="gdp_pc" name="linegraph">
+    <label for="gdp_pc"> GDP per Capita</label>
+    <br>
+    <input class="selectYear" type="radio" id="mil_exp" name="linegraph">
+    <label for="mil_exp"> Military expenditure (% of GDP)</label>
+    <br>
+    <input class="selectYear" type="radio" id="arms_exp" name="linegraph">
+    <label for="arms_exp"> Arms exported</label>
+    <br>
+    <input class="selectYear" type="radio" id="arms_imp" name="linegraph">
+    <label for="arms_imp"> Arms imported</label>
+    <br>
+    <input class="selectYear" type="radio" id="arms_pers" name="linegraph">
+    <label for="arms_pers"> Armed personell (% of labour force)</label>
+  </fieldset>
 </div>
 <div class="linegraph"></div>
 <div class ="info">

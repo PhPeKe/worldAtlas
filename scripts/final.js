@@ -1,27 +1,17 @@
 window.onload = function() {
 
-/*
-    Prepare all variables
-*/
-
   // Declare all necessary variables
-  var margin = {top: -20, right: 0, bottom: 20, left: 50},
+  var margin = {top: 20, right: 0, bottom: 20, left: 50},
       width = 960,
       height = 600,
       format = d3.format(","),
       path = d3.geoPath(),
       selectedYear = "2010",
       selectedSeries = "life_exp";
-      selectedCountries = ["004","840"],
-      selectWorld = d3.select('svg g rect'),
+      selectedCountries = ["world"],
+      selectWorld = d3.select("svg g rect"),
+      input = d3.selectAll("input"),
       parseTime = d3.timeParse("%Y");
-
-
-      selectWorld.on('click', function() {
-        selectedCountries = [];
-        selectedCountries = "world";
-        log(selectedCountries);
-      });
 
   var tip = makeTooltip(selectedSeries, selectedYear);
 
@@ -29,8 +19,6 @@ window.onload = function() {
 
   var map = world[0],
       path = world[1];
-
-  var linegraph = makeLinegraph(width, height, margin);
 
   // Load in data
   queue()
@@ -57,7 +45,7 @@ window.onload = function() {
     var countries = topojson.feature(world, world.objects.countries).features;
 
     // Save all data in list to pass it to aggregateData
-    allData = [];
+    var allData = [];
     allData.push(iso);
     allData.push(countries);
     allData.push(gdp_pc);
@@ -78,41 +66,19 @@ window.onload = function() {
     // Get statistics and z-scores for all entrys
     var stats = getStats(data);
 
-    log(stats, "Stats: ");
-    log(data, "data: ");
+    drawWorld(map, stats, countries, path, tip, data, selectedSeries, selectedYear, selectedCountries);
+    drawLinegraph(data, stats, selectedCountries, selectedSeries, width, height, margin);
+    // Set listener for selectig the world
+    selectWorld.on('click', function() {
+      selectedCountries = [];
+      selectedCountries = ["world"];
+      drawLinegraph(data, stats, selectedCountries, selectedSeries, width, height, margin);
+    });
 
-    var domain = getDomain(data, selectedSeries, selectedYear);
-
-    // Set function that is returning color appropriate to value
-    color = d3.scaleLinear()
-      .domain(domain)
-      .range(['#ff0000','#00ff00']);
-
-    appendWorld(map, countries, path, tip, data, color, selectedSeries, selectedYear, selectedCountries);
-
-    //Prepare x,y-scale and line
-    var x = d3.scaleTime()
-      .rangeRound([0, width]);
-    var y = d3.scaleLinear()
-      .rangeRound([height , 0]);
-    var line = d3.line()
-        .x(function(d) { return x(d.year);})
-        .y(function(d) { return y(d.value);});
-
-    //Set domains
-    x.domain(d3.extent(years, function(d) {return d.year}));
-    y.domain(domain);
-
-    //Append x,y-axis
-    linegraph.append("g")
-        .attr("class","linegraph")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x));
-    linegraph.append("g").transition()
-        .attr("class","linegraph")
-        .call(d3.axisLeft(y));
-
-    var lineData = getLineData(data, stats, selectedYear, selectedSeries, selectedCountries);
-    log(lineData, "Linedata: ");
+    input.on("click", function() {
+      selectedSeries = d3.select(this).attr("id");
+      drawWorld(map, stats, countries, path, tip, data, selectedSeries, selectedYear, selectedCountries);
+      drawLinegraph(data, stats, selectedCountries, selectedSeries, width, height, margin);
+    });
   }
 }
