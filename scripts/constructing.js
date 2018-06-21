@@ -1,4 +1,17 @@
-function appendWorld(map, countries, path, tip, data, color, selectedSeries,selectedYear, selectedCountries) {
+function drawWorld(map, stats, countries, path, tip, data, selectedSeries,selectedYear, selectedCountries) {
+  var margin = {top: 20, right: 0, bottom: 20, left: 50},
+      width = 960,
+      height = 600;
+
+  d3.selectAll(".countries").remove();
+
+  var domain = getDomain(data, selectedSeries, selectedYear);
+
+  // Set function that is returning color appropriate to value
+  color = d3.scaleLinear()
+    .domain(domain)
+    .range(['#ff0000','#00ff00']);
+
   // Append countries to world-map svg
   map.append("g")
       .attr("class", "countries")
@@ -43,8 +56,8 @@ function appendWorld(map, countries, path, tip, data, color, selectedSeries,sele
               var index = selectedCountries.indexOf(thisCode);
               selectedCountries.splice(index,1);
             }
-            if(selectedCountries == []) selectedCountries = "world";
-            drawLinegraph(selectedCountries);
+            if(selectedCountries.length == 0) selectedCountries = ["world"];
+            drawLinegraph(data, stats, selectedCountries, selectedSeries, width, height, margin);
           }
 
         });
@@ -110,14 +123,85 @@ function makeLinegraph(width, height, margin) {
   //Prepare Linegraph
   var linegraph = d3.select("div.linegraph")
           .append("svg")
-            .attr("width", width)
-            .attr("height", height)
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .attr("class", "graph")
           .append('g')
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   return linegraph;
 }
 
-function drawLinegraph(selectedCountries) {
-  log(selectedCountries, "Drawing Linegraph with");
+function drawLinegraph(data, stats, selectedCountries, selectedSeries, width, height, margin) {
+
+  // Remove old elements before drawing
+  d3.selectAll(".graph").remove();
+  d3.selectAll(".path").remove();
+  d3.selectAll(".axis").remove();
+
+  var linegraph = makeLinegraph(width, height, margin);
+  var linecolors = ["#1f78b4","#33a02c","#e31a1c","#ff7f00","#6a3d9a",
+                    "#a6cee3","#b2df8a","#fb9a99","#fdbf6f","#cab2d6"];
+
+  // Get data for drawing linegraph
+  var lineData = getLineData(data, stats, selectedSeries, selectedCountries);
+
+  //Prepare x,y-scale and line
+  var x = d3.scaleTime()
+    .rangeRound([0, width]);
+  var y = d3.scaleLinear()
+    .rangeRound([height , 0]);
+  var line = d3.line()
+    .defined(function(d) { return d.value; })
+    .x(function(d) { return x(d.year);})
+    .y(function(d) { return y(d.value);});
+
+  domainList = [];
+  for(entry in lineData) {
+    lineData[entry].forEach(function(d) {
+      domainList.push(d);
+    });
+  }
+  console.log(lineData);
+
+  //Set domains
+  x.domain(d3.extent(domainList, function(d) {return d.year}));
+  y.domain(d3.extent(domainList, function(d) {return d.value}));
+
+  var first = true;
+  var i = 0;
+
+  for(entry in lineData) {
+    var b = lineData[entry];
+
+    //Append x&y-axis
+    if(first) linegraph.append("g")
+        .attr("class","axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
+    if(first) linegraph.append("g").transition()
+        .attr("class","axis")
+        .call(d3.axisLeft(y));
+
+    //Append path i times
+    linegraph.append("path")
+        .datum(b)
+        .attr("class","path")
+        //.attr("id", i)
+        .attr("fill", "none")
+        .style("cursor","pointer")
+        .attr("stroke", linecolors[i])
+        .attr("stroke-linejoin", "round")
+        .attr("stroke-linecap", "round")
+        .attr("stroke-width", 6)
+        .attr("d", line)
+        .on("click", function(d) {
+          console.log("Hi");
+        });
+
+    first = false;
+    i+=1;
+  }
+
+
 }
