@@ -12,7 +12,16 @@ window.onload = function() {
       path = d3.geoPath(),
       selectedYear = "2010",
       selectedSeries = "life_exp";
-      selectedCountries = ["004","840"];
+      selectedCountries = ["004","840"],
+      selectWorld = d3.select('svg g rect'),
+      parseTime = d3.timeParse("%Y");
+
+
+      selectWorld.on('click', function() {
+        selectedCountries = [];
+        selectedCountries = "world";
+        log(selectedCountries);
+      });
 
   var tip = makeTooltip(selectedSeries, selectedYear);
 
@@ -87,8 +96,8 @@ window.onload = function() {
     var y = d3.scaleLinear()
       .rangeRound([height , 0]);
     var line = d3.line()
-        .x(function(years) { return x(d);})
-        .y(function(d) { return y(d);});
+        .x(function(d) { return x(d.year);})
+        .y(function(d) { return y(d.value);});
 
     //Set domains
     x.domain(d3.extent(years, function(d) {return d.year}));

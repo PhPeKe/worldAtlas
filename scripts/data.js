@@ -10,7 +10,6 @@ function aggregateData(allData) {
   var mil_exp = allData[7];
   data = {};
 
-  var datas = [gdp,le, mil_exp, arms_exp,arms_imp, arms_pers];
 
   var names = ["iso","countries","gdp_pc","life_exp","arms_pers","arms_exp","arms_imp","mil_exp"];
 

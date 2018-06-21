@@ -43,9 +43,10 @@ function appendWorld(map, countries, path, tip, data, color, selectedSeries,sele
               var index = selectedCountries.indexOf(thisCode);
               selectedCountries.splice(index,1);
             }
+            if(selectedCountries == []) selectedCountries = "world";
+            drawLinegraph(selectedCountries);
           }
-          if(!(selectedCountries[0])) selectedCountries = "world";
-          drawLinegraph(selectedCountries);
+
         });
 
   map.append("path")
