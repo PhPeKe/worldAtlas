@@ -224,6 +224,7 @@ function getStats(data) {
 
   // Get z-scores per country per series (z = (x – mean) / var)
   // Get z-scores per series (z = (x – μ) / σ)
+  // What is a zascore? - http://www.statisticshowto.com/probability-and-statistics/z-score/
   for(country in data) {
     for(series in data[country].series) {
       for(year in data[country].series[series].values) {
