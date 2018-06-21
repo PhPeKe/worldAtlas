@@ -25,7 +25,7 @@
     selection = "60",
     selection_data = "pop",
     domain = [],
-    selectedCountries = [],
+    selection.countries = [],
     mapLabels = ["High","Medium","Low","NA"],
     sliderState = 0,
     countries = [],
@@ -118,11 +118,11 @@
         var thisCode = d3.select(this).attr("iso");
         console.log(d3.select(this))
         //If country is not present in list append, else splice
-        if (!selectedCountries.includes(thisCode)) {
-          selectedCountries.push(thisCode);
+        if (!selection.countries.includes(thisCode)) {
+          selection.countries.push(thisCode);
         } else {
-            var index = selectedCountries.indexOf(thisCode);
-            selectedCountries.splice(index,1);
+            var index = selection.countries.indexOf(thisCode);
+            selection.countries.splice(index,1);
         }
         d3.selectAll(".mapLabels").moveToFront();
         d3.selectAll(".linegraphdata").remove();

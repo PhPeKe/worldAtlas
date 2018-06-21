@@ -10,13 +10,10 @@ window.onload = function() {
       selection.year = "2010",
       selection.series = "life_exp",
       selection.countries = ["world"],
-      selectedYear = "2010",
-      selectedSeries = "life_exp",
-      selectedCountries = ["world"],
       selectWorld = d3.select("svg g rect"),
       input = d3.selectAll("input"),
       parseTime = d3.timeParse("%Y"),
-      tip = makeTooltip(selectedSeries, selectedYear),
+      tip = makeTooltip(selection),
       world = prepareWorld(width, height, tip),
       map = world[0],
       path = world[1];
@@ -60,26 +57,26 @@ window.onload = function() {
     var data = aggregateData(allData);
 
     var years = [];
-    for (key in data["004"].series[selectedSeries].values) {
+    for (key in data["004"].series[selection.series].values) {
       years.push(new Date (key));
     }
 
     // Get statistics and z-scores for all entrys
     var stats = getStats(data);
 
-    drawWorld(map, stats, countries, path, tip, data, selectedSeries, selectedYear, selectedCountries);
-    drawLinegraph(data, stats, selectedCountries, selectedSeries, width, height, margin);
+    drawWorld(map, stats, countries, path, tip, data, selection);
+    drawLinegraph(data, stats, selection, width, height, margin);
     // Set listener for selectig the world
     selectWorld.on('click', function() {
-      selectedCountries = [];
-      selectedCountries = ["world"];
-      drawLinegraph(data, stats, selectedCountries, selectedSeries, width, height, margin);
+      selection.countries = [];
+      selection.countries = ["world"];
+      drawLinegraph(data, stats, selection, width, height, margin);
     });
 
     input.on("click", function() {
-      selectedSeries = d3.select(this).attr("id");
-      drawWorld(map, stats, countries, path, tip, data, selectedSeries, selectedYear, selectedCountries);
-      drawLinegraph(data, stats, selectedCountries, selectedSeries, width, height, margin);
+      selection.series = d3.select(this).attr("id");
+      drawWorld(map, stats, countries, path, tip, data, selection);
+      drawLinegraph(data, stats, selection, width, height, margin);
     });
   }
 }

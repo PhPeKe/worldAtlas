@@ -72,14 +72,14 @@ function log(object, message) {
 }
 
 
-function getDomain(data, selectedSeries, selectedYear) {
+function getDomain(data, selection) {
   // Workaround for the domainlist
   var domainList = [];
   for(key in data) {
-    if (isNaN(data[key].series[selectedSeries].values[selectedYear]) == false)domainList.push(data[key].series[selectedSeries]["values"][selectedYear]);
+    if (isNaN(data[key].series[selection.series].values[selection.year]) == false)domainList.push(data[key].series[selection.series].values[selection.year]);
   };
 
-  var domain = d3.extent(domainList, function(d){return d; });//return d[selectedSeries][selectedYear]});
+  var domain = d3.extent(domainList, function(d){return d; });//return d[selection.series][selection.year]});
   return domain;
 }
 
@@ -253,17 +253,19 @@ function update() {
   log("HI","HI");
 }
 
-function getLineData(data, stats, selectedSeries, selectedCountries) {
+function getLineData(data, stats, selection) {
   var lineData = {};
+  console.log("selection");
+  console.log(selection);
   // If nothing is selected the average of the whole world is given back
-  if(selectedCountries == "world") {
+  if(selection.countries == "world") {
     lineData["world"] = [];
-    for(key in stats[selectedSeries].meanByYear) {
+    for(key in stats[selection.series].meanByYear) {
       var object = {};
       object.year = +key;
-      if(isNaN(stats[selectedSeries].meanByYearZ[key])) object.value = undefined;
-      else object.value = stats[selectedSeries].meanByYearZ[key];
-      object.seriesName = data["004"].series[selectedSeries].series;
+      if(isNaN(stats[selection.series].meanByYearZ[key])) object.value = undefined;
+      else object.value = stats[selection.series].meanByYearZ[key];
+      object.seriesName = data["004"].series[selection.series].series;
       object.name = "world";
       lineData["world"].push(object);
     }
@@ -271,16 +273,17 @@ function getLineData(data, stats, selectedSeries, selectedCountries) {
   }
 
   var lineData = {};
+
   // If selection is made selected data is returned
-  selectedCountries.forEach(function(selectedCountry) {
+  selection.countries.forEach(function(selectedCountry) {
     var otherObject = {};
     otherObject[selectedCountry] = [];
-    for(year in data[selectedCountry].series[selectedSeries].zscores) {
+    for(year in data[selectedCountry].series[selection.series].zscores) {
       var object = {};
       object.year = +year;
-      if(isNaN(data[selectedCountry].series[selectedSeries].zscores[year])) object.value = undefined;
-      else object.value = data[selectedCountry].series[selectedSeries].zscores[year];
-      object.seriesName = data[selectedCountry].series[selectedSeries].series;
+      if(isNaN(data[selectedCountry].series[selection.series].zscores[year])) object.value = undefined;
+      else object.value = data[selectedCountry].series[selection.series].zscores[year];
+      object.seriesName = data[selectedCountry].series[selection.series].series;
       object.name = data[selectedCountry].name;
       otherObject[selectedCountry].push(object);
     }
