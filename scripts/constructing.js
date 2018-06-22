@@ -198,7 +198,7 @@ function drawLinegraph(data, stats, selectedCountries, selectedSeries, width, he
         .on("click", function(d) {
           console.log("Hi");
         });
-
+//!!!!!!!!!!!!!!!! Compare worldwide on linechart and countrywise with marimekko chart
     first = false;
     i+=1;
   }

@@ -65,7 +65,7 @@ window.onload = function() {
 
     // Get statistics and z-scores for all entrys
     var stats = getStats(data);
-
+    console.log(data);
     drawWorld(map, stats, countries, path, tip, data, selectedSeries, selectedYear, selectedCountries);
     drawLinegraph(data, stats, selectedCountries, selectedSeries, width, height, margin);
     // Set listener for selectig the world
