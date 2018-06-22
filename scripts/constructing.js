@@ -47,6 +47,22 @@ function drawWorld(map, stats, countries, path, tip, data, selection) {
         })
         .on("click", function(d) {
           if(selection.countries == "world") selection.countries = [];
+
+          if(d3.select(this).attr("selected") == "false") {
+            console.log(d3.select(this).attr("selected"));
+            d3.select(this).attr("selected","true")
+            d3.select(this).style("opacity",1)
+            d3.select(this).style("stroke","red")
+            d3.select(this).style("stroke-width",2);
+          }
+
+          if(d3.select(this).attr("selected") == "true") {
+            d3.select(this).style("opacity",0.8);
+              d3.select(this).attr("selected","true");
+              d3.select(this).style("stroke","white");
+              d3.select(this).style("stroke-width",0.3);
+          }
+
           if(d3.select(this).attr("id")) {
           var thisCode = d3.select(this).attr("id");
           //If country is not present in list append, else splice
@@ -102,7 +118,6 @@ function prepareWorld(width, height, tip) {
 
 
 function makeTooltip(selection) {
-  console.log(selection);
   // Set tooltip
   var tip = d3.tip()
               .attr('class', 'd3-tip')
@@ -132,6 +147,7 @@ function makeLinegraph(width, height, margin) {
 
   return linegraph;
 }
+
 
 function drawLinegraph(data, stats, selection, width, height, margin) {
 
@@ -196,12 +212,42 @@ function drawLinegraph(data, stats, selection, width, height, margin) {
         .attr("stroke-width", 6)
         .attr("d", line)
         .on("click", function(d) {
-          console.log("Hi");
+          if(selection.countries == "world") {
+            return;
+          }
+          // Splice list
+          selection.countries.splice(selection.countries.indexOf(d[0].iso),1);
+          if(selection.countries.length == 0) selection.countries = ["world"];
+          console.log(selection.countries);
+          drawLinegraph(data, stats, selection, width, height, margin);
         });
 //!!!!!!!!!!!!!!!! Compare worldwide on linechart and countrywise with marimekko chart
     first = false;
     i+=1;
   }
+}
 
 
+function makeMarimekko(size) {
+  var svg = d3.select("div.marimekko").append("svg")
+      .attr("width", size.width)
+      .attr("height", size.height)
+    .append("g")
+      .attr("transform", "translate(" + 2 * size.margin.left + "," + size.margin.top + ")");
+}
+
+
+function drawMarimekko (data, stats, selection, size) {
+  var x = d3.scale.linear()
+      .range([0, width - 3 * margin]);
+
+  var y = d3.scale.linear()
+      .range([0, height - 2 * margin]);
+
+  var z = d3.scale.category10();
+
+  var n = d3.format(",d"),
+      p = d3.format("%")
+
+  var marimekkoData = getMarimekkoData(data, stats, selection);
 }

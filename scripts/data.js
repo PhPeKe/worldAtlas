@@ -240,10 +240,15 @@ function getStats(data) {
 
   // Get z-scores for mean values
   for(series in stats) {
+    var total = 0;
+    var n = 0;
     for(year in stats[series].meanByYear) {
       if(!(stats[series].meanByYearZ)) stats[series].meanByYearZ = {};
       stats[series].meanByYearZ[year] = (stats[series].meanByYear[year] - stats[series].mean)/stats[series].var;
+      total += stats[series].meanByYearZ[year];
+      n += 1;
     }
+    stats[series].meanZ = total/n;
   }
 
   return stats;
@@ -255,14 +260,19 @@ function update() {
 
 function getLineData(data, stats, selection) {
   var lineData = {};
-  console.log("selection");
-  console.log(selection);
+
+  console.log("data");
+  console.log(data);
+  console.log("stats");
+  console.log(stats);
+
   // If nothing is selected the average of the whole world is given back
   if(selection.countries == "world") {
     lineData["world"] = [];
     for(key in stats[selection.series].meanByYear) {
       var object = {};
       object.year = +key;
+      object.iso = "000";
       if(isNaN(stats[selection.series].meanByYearZ[key])) object.value = undefined;
       else object.value = stats[selection.series].meanByYearZ[key];
       object.seriesName = data["004"].series[selection.series].series;
@@ -281,6 +291,7 @@ function getLineData(data, stats, selection) {
     for(year in data[selectedCountry].series[selection.series].zscores) {
       var object = {};
       object.year = +year;
+      object.iso = selectedCountry;
       if(isNaN(data[selectedCountry].series[selection.series].zscores[year])) object.value = undefined;
       else object.value = data[selectedCountry].series[selection.series].zscores[year];
       object.seriesName = data[selectedCountry].series[selection.series].series;
@@ -290,4 +301,27 @@ function getLineData(data, stats, selection) {
     lineData[selectedCountry] = otherObject[selectedCountry];
   });
   return lineData;
+}
+
+
+function getMarimekkoData (data, stats, selection) {
+  marimekkoData = [];
+
+  if(selection.countries == ["world"]) {
+    for(series in stats) {
+      var name = world;
+      var series = series;
+      var seriesName = data["004"].series[series].series;
+      var value = HIER
+    }
+  }
+
+  for(country in selection.countries) {
+    var name = data[country];
+    for(series in data[country].series) {
+      var seriesName = data[country].series[series].series;
+      var series = series;
+
+    }
+  }
 }

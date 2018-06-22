@@ -1,7 +1,11 @@
 window.onload = function() {
 
   // Declare all necessary variables
-  var margin = {top: 20, right: 0, bottom: 20, left: 50},
+  var size = {};
+      size.margin = {top: 20, right: 0, bottom: 20, left: 50},
+      size.width = 960,
+      size.height = 600,
+      margin = {top: 20, right: 0, bottom: 20, left: 50},
       width = 960,
       height = 600,
       format = d3.format(","),
@@ -10,11 +14,14 @@ window.onload = function() {
       selection.year = "2010",
       selection.series = "life_exp",
       selection.countries = ["world"],
+      selection.mode = "countries",
       selectWorld = d3.select("svg g rect"),
-      input = d3.selectAll("input"),
+      input = d3.selectAll("input.linegraph"),
+      inputMode = d3.selectAll("input.mode"),
       parseTime = d3.timeParse("%Y"),
       tip = makeTooltip(selection),
       world = prepareWorld(width, height, tip),
+      marimekko = makeMarimekko(size),
       map = world[0],
       path = world[1];
 
@@ -66,6 +73,7 @@ window.onload = function() {
 
     drawWorld(map, stats, countries, path, tip, data, selection);
     drawLinegraph(data, stats, selection, width, height, margin);
+
     // Set listener for selectig the world
     selectWorld.on('click', function() {
       selection.countries = [];
@@ -77,6 +85,15 @@ window.onload = function() {
       selection.series = d3.select(this).attr("id");
       drawWorld(map, stats, countries, path, tip, data, selection);
       drawLinegraph(data, stats, selection, width, height, margin);
+    });
+
+    inputMode.on("click", function() {
+      if(selection.mode == "countries") {
+        selection.mode = "series";
+      } else {
+        selection.mode = "countries";
+      }
+      console.log(selection.mode);
     });
   }
 }
