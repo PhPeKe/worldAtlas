@@ -73,14 +73,14 @@ function log(object, message) {
 }
 
 
-function getDomain(data, selectedSeries, selectedYear) {
+function getDomain(data, selection.series, selection.year) {
   // Workaround for the domainlist
   var domainList = [];
   for(key in data) {
-    if (isNaN(data[key][selectedSeries]["values"][selectedYear]) == false)domainList.push(data[key][selectedSeries]["values"][selectedYear]);
+    if (isNaN(data[key][selection.series]["values"][selection.year]) == false)domainList.push(data[key][selection.series]["values"][selection.year]);
   };
 
-  var domain = d3.extent(domainList, function(d){return d; });//return d[selectedSeries][selectedYear]});
+  var domain = d3.extent(domainList, function(d){return d; });//return d[selection.series][selection.year]});
   return domain;
 }
 
@@ -116,7 +116,7 @@ function prepareWorld(width, height, tip) {
 }
 
 
-function makeTooltip(selectedSeries, selectedYear) {
+function makeTooltip(selection) {
   // Set tooltip
   var tip = d3.tip()
               .attr('class', 'd3-tip')
@@ -124,9 +124,9 @@ function makeTooltip(selectedSeries, selectedYear) {
               .html(function(d){ return "Name: "
                                        + data[d.id].name
                                        + "<br>"
-                                       + data[d.id][selectedSeries].series
+                                       + data[d.id][selection.series].series
                                        + ": <br>"
-                                       + data[d.id][selectedSeries].values[selectedYear];
+                                       + data[d.id][selection.series].values[selection.year];
                                      });
   return tip;
 }

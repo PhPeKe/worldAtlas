@@ -1,11 +1,11 @@
-function drawWorld(map, stats, countries, path, tip, data, selectedSeries,selectedYear, selectedCountries) {
+function drawWorld(map, stats, countries, path, tip, data, selection) {
   var margin = {top: 20, right: 0, bottom: 20, left: 50},
       width = 960,
       height = 600;
 
   d3.selectAll(".countries").remove();
 
-  var domain = getDomain(data, selectedSeries, selectedYear);
+  var domain = getDomain(data, selection);
 
   // Set function that is returning color appropriate to value
   color = d3.scaleLinear()
@@ -22,7 +22,7 @@ function drawWorld(map, stats, countries, path, tip, data, selectedSeries,select
       .attr("selected","false")
       .attr("class","country")
       .attr("id", function(d) { return d.id; })
-      .style("fill", function(d) { return color(data[d.id].series[selectedSeries].values[selectedYear]); })
+      .style("fill", function(d) { return color(data[d.id].series[selection.series].values[selection.year]); })
       .style('stroke', 'white')
       .style('stroke-width', 1.5)
       .style("opacity",0.8)
@@ -46,18 +46,18 @@ function drawWorld(map, stats, countries, path, tip, data, selectedSeries,select
             .style("stroke-width",0.3);
         })
         .on("click", function(d) {
-          if(selectedCountries == "world") selectedCountries = [];
+          if(selection.countries == "world") selection.countries = [];
           if(d3.select(this).attr("id")) {
           var thisCode = d3.select(this).attr("id");
           //If country is not present in list append, else splice
-          if(!selectedCountries.includes(thisCode)) {
-            selectedCountries.push(thisCode);
+          if(!selection.countries.includes(thisCode)) {
+            selection.countries.push(thisCode);
           } else {
-              var index = selectedCountries.indexOf(thisCode);
-              selectedCountries.splice(index,1);
+              var index = selection.countries.indexOf(thisCode);
+              selection.countries.splice(index,1);
             }
-            if(selectedCountries.length == 0) selectedCountries = ["world"];
-            drawLinegraph(data, stats, selectedCountries, selectedSeries, width, height, margin);
+            if(selection.countries.length == 0) selection.countries = ["world"];
+            drawLinegraph(data, stats, selection, width, height, margin);
           }
 
         });
@@ -101,19 +101,20 @@ function prepareWorld(width, height, tip) {
 }
 
 
-function makeTooltip(selectedSeries, selectedYear) {
+function makeTooltip(selection) {
+  console.log(selection);
   // Set tooltip
   var tip = d3.tip()
               .attr('class', 'd3-tip')
               .offset([-10, 0])
-              .html(function(d){ return selectedYear
+              .html(function(d){ return selection.year
                                        + "<br>"
                                        + "Name: "
                                        + data[d.id].name
                                        + "<br>"
-                                       + data[d.id].series[selectedSeries].series
+                                       + data[d.id].series[selection.series].series
                                        + ": <br>"
-                                       + Math.round(data[d.id].series[selectedSeries].values[selectedYear]*100)/100;
+                                       + Math.round(data[d.id].series[selection.series].values[selection.year]*100)/100;
                                      });
   return tip;
 }
@@ -132,7 +133,7 @@ function makeLinegraph(width, height, margin) {
   return linegraph;
 }
 
-function drawLinegraph(data, stats, selectedCountries, selectedSeries, width, height, margin) {
+function drawLinegraph(data, stats, selection, width, height, margin) {
 
   // Remove old elements before drawing
   d3.selectAll(".graph").remove();
@@ -144,7 +145,7 @@ function drawLinegraph(data, stats, selectedCountries, selectedSeries, width, he
                     "#a6cee3","#b2df8a","#fb9a99","#fdbf6f","#cab2d6"];
 
   // Get data for drawing linegraph
-  var lineData = getLineData(data, stats, selectedSeries, selectedCountries);
+  var lineData = getLineData(data, stats, selection);
 
   //Prepare x,y-scale and line
   var x = d3.scaleTime()
@@ -162,7 +163,6 @@ function drawLinegraph(data, stats, selectedCountries, selectedSeries, width, he
       domainList.push(d);
     });
   }
-  console.log(lineData);
 
   //Set domains
   x.domain(d3.extent(domainList, function(d) {return d.year}));
