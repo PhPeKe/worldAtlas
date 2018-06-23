@@ -50,17 +50,19 @@ function drawWorld(map, stats, countries, path, tip, data, selection) {
 
           if(d3.select(this).attr("selected") == "false") {
             console.log(d3.select(this).attr("selected"));
-            d3.select(this).attr("selected","true")
-            d3.select(this).style("opacity",1)
-            d3.select(this).style("stroke","red")
-            d3.select(this).style("stroke-width",2);
+            d3.select(this)
+              .attr("selected","true")
+              .style("opacity",1)
+              .style("stroke","red")
+              .style("stroke-width",2);
           }
 
           if(d3.select(this).attr("selected") == "true") {
-            d3.select(this).style("opacity",0.8);
-              d3.select(this).attr("selected","true");
-              d3.select(this).style("stroke","white");
-              d3.select(this).style("stroke-width",0.3);
+            d3.select(this)
+              .style("opacity",0.8)
+              .attr("selected","true")
+              .style("stroke","white")
+              .style("stroke-width",0.3);
           }
 
           if(d3.select(this).attr("id")) {
@@ -211,7 +213,7 @@ function drawLinegraph(data, stats, selection, width, height, margin) {
         .attr("stroke-linecap", "round")
         .attr("stroke-width", 6)
         .attr("d", line)
-        .on("click", function(d) {
+        .on("dblclick", function(d) {
           if(selection.countries == "world") {
             return;
           }
@@ -220,6 +222,10 @@ function drawLinegraph(data, stats, selection, width, height, margin) {
           if(selection.countries.length == 0) selection.countries = ["world"];
           console.log(selection.countries);
           drawLinegraph(data, stats, selection, width, height, margin);
+        })
+        .on("click", function(d) {
+          console.log("One Click");
+          //ToDo: Add country to marimekko chart
         });
 //!!!!!!!!!!!!!!!! Compare worldwide on linechart and countrywise with marimekko chart
     first = false;

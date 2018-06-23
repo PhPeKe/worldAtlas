@@ -1,7 +1,7 @@
 # 04-06
 - Chose a subject: Visualization of DNA
 - Chose a backup subject: Visualizing a place (automatically create a text from it)
-ToDo:
+##ToDo:
 Downlad data
 Write proposal
 Sketch prototype
@@ -14,7 +14,7 @@ Sketch prototype
 - Began to collect data
 - Re-delivered project proposal
 - Proposal accepted
-ToDo:
+##ToDo:
 Write design document
 Aggregate data
 
@@ -55,17 +55,49 @@ Aggregate data
 - Solved the bug
 - Problem: d3.extent expects a list not an object:
   - copying all values to a list before
-ToDo:
 
 
 # 15-06
+- Finished loading in all data into an object that allows selection
+##ToDo:
+- Creating statistics and z-scores for all values
+- Creating z-scores for the mean values per year and per country
+  - This makes it possible to compare different variables in the same linegraph
 
 # 18-06
 - Creating statistics per series and per country
 - Preparing Linegraph
 - outsourcing functions
+
 # 19-06
+- Draw linegraph
+- Bug: linegraph is not shown on the right space
+  - First thought it was an issue of translate but then found out that the domains
+    were not specified correctly
+##Ideas:
 - Select data for linegraph with marimekko chart
 - Select point in time displayed on worldmap with crosshair linegraph
 - Marimekko chart: Show data either per year or overall
   - Same button for worldmap
+
+# 20-06
+- Finished function to prepare data for the linechart
+- Beginning with drawing all data
+
+# 21-06
+- Finished drawing all lines for the linegraph
+- Now selecting countries from map
+- Make list that is passed around between worldmap and linegraph
+  - When country is clicked and not present it gets pushed to the list
+  - When it is already present the list is spliced
+
+# 22-06
+- Selecting different series is now also changing the linegraph
+- Selecting countries on worldmap is also changing the linegraph
+- Clicking on the lines in the linegraph is deselecting countries
+##ToDo:
+- one click in linegraph selects countries to display in marimekko chart
+- double click deselects country from linegraph
+- Highlight selected countries on worldmap
+
+# 23-06
