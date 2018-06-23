@@ -250,7 +250,7 @@ function getStats(data) {
     }
     stats[series].meanZ = total/n;
   }
-
+console.log(stats);
   return stats;
 }
 
@@ -302,13 +302,16 @@ function getLineData(data, stats, selection) {
 function getMarimekkoData (data, stats, selection) {
   marimekkoData = [];
 
-  if(selection.countries == ["world"]) {
+  if(selection.countries == "world") {
     for(series in stats) {
       var name = world;
       var series = series;
       var seriesName = data["004"].series[series].series;
-      var value = HIER
+      var value = stats[series].meanZ;
     }
+
+    console.log(marimekkoData);
+    return marimekkoData;
   }
 
   for(country in selection.countries) {

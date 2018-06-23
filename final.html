@@ -19,7 +19,10 @@
   <script src="scripts/d3/d3CheckBox.js"></script>
   <script src="scripts/d3/d3-dsv.min.js"></script>
   <script src="scripts/d3/bootstrap.min.js"></script>
-  <script src="scripts/constructing.js" charset="utf-8"></script>
+  <script src="scripts/worldmap.js" charset="utf-8"></script>
+  <script src="scripts/marimekko.js" charset="utf-8"></script>
+  <script src="scripts/linegraph.js" charset="utf-8"></script>
+  <script src="scripts/tooltips.js" charset="utf-8"></script>
   <script src="scripts/data.js" charset="utf-8"></script>
   <script src="scripts/final.js" charset="utf-8"></script>
 </head>
@@ -57,10 +60,10 @@
     <label for="arms_pers"> Armed personell (% of labour force)</label>
   </fieldset>
   <input class="mode" type="checkbox" id="mode" name="marimekko">
-  <label for="arms_pers"> Armed personell (% of labour force)</label>
+  <label for="mode"> Toggle mode</label>
 </div>
-<div class="linegraph"></div>
-<div class="marimekko"></div>
+<div id="linegraph" class="linegraph"></div>
+<div id="marimekko" class="marimekko"></div>
 <div class ="info">
   <p id="info">
           <strong>Name:</strong> Phillip Kersten<br>
