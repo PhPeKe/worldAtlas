@@ -261,11 +261,6 @@ function update() {
 function getLineData(data, stats, selection) {
   var lineData = {};
 
-  console.log("data");
-  console.log(data);
-  console.log("stats");
-  console.log(stats);
-
   // If nothing is selected the average of the whole world is given back
   if(selection.countries == "world") {
     lineData["world"] = [];

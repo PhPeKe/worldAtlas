@@ -23,60 +23,60 @@ function drawWorld(map, stats, countries, path, tip, data, selection) {
       .attr("class","country")
       .attr("id", function(d) { return d.id; })
       .style("fill", function(d) { return color(data[d.id].series[selection.series].values[selection.year]); })
-      .style('stroke', 'white')
-      .style('stroke-width', 1.5)
+      .style('stroke', function() {
+        if(d3.select(this).attr("selected") == "true") return "red";
+        else return "white";
+      })
+      .style('stroke-width', 0.3)
       .style("opacity",0.8)
       // tooltips
-        .style("stroke","white")
-        .style('stroke-width', 0.3)
-        .on('mouseover',function(d){
-          tip.show(d);
+      .on('mouseover',function(d){
+        tip.show(d);
 
-          d3.select(this)
-            .style("opacity", 1)
-            .style("stroke","white")
-            .style("stroke-width",3);
-        })
-        .on('mouseout', function(d){
-          tip.hide(d);
-
-          d3.select(this)
-            .style("opacity", 0.8)
-            .style("stroke","white")
-            .style("stroke-width",0.3);
-        })
-        .on("click", function(d) {
-          if(selection.countries == "world") selection.countries = [];
-
-          if(d3.select(this).attr("selected") == "false") {
+        d3.select(this)
+          .style("opacity", 1)
+          .style("stroke", function() {
             console.log(d3.select(this).attr("selected"));
-            d3.select(this)
-              .attr("selected","true")
-              .style("opacity",1)
-              .style("stroke","red")
-              .style("stroke-width",2);
-          }
+            if(d3.select(this).attr("selected") == "true") {console.log("red"); return "red";}
+            else return "white";
+          })
+          .style("stroke-width",2);
+      })
+      .on('mouseout', function(d){
+        tip.hide(d);
 
-          if(d3.select(this).attr("selected") == "true") {
-            d3.select(this)
-              .style("opacity",0.8)
-              .attr("selected","true")
-              .style("stroke","white")
-              .style("stroke-width",0.3);
-          }
+        d3.select(this)
+          .style("opacity", 0.8)
+          .style("stroke",function(d) {
+            if(d3.select(this).attr("selected") == "true") return "red";
+            else return "white";
+          })
+          .style("stroke-width",0.3);
+      })
+      .on("click", function(d) {
+        if(selection.countries == "world") selection.countries = [];
+        if(d3.select(this).attr("selected") == "false") {
+          d3.select(this).attr("selected", "true");
+        }
 
-          if(d3.select(this).attr("id")) {
-          var thisCode = d3.select(this).attr("id");
-          //If country is not present in list append, else splice
-          if(!selection.countries.includes(thisCode)) {
-            selection.countries.push(thisCode);
-          } else {
-              var index = selection.countries.indexOf(thisCode);
-              selection.countries.splice(index,1);
-            }
-            if(selection.countries.length == 0) selection.countries = ["world"];
-            drawLinegraph(data, stats, selection, width, height, margin);
+        if(d3.select(this).attr("selected") == "true") {
+          d3.select(this).attr("selected", "false");
+        }
+
+        if(d3.select(this).attr("id")) {
+        var thisCode = d3.select(this).attr("id");
+        //If country is not present in list append, else splice
+        if(!selection.countries.includes(thisCode)) {
+          selection.countries.push(thisCode);
+        } else {
+            var index = selection.countries.indexOf(thisCode);
+            selection.countries.splice(index,1);
           }
+          if(selection.countries.length == 0) selection.countries = ["world"];
+          drawLinegraph(data, stats, selection, width, height, margin);
+        }
+
+        drawWorld(map, stats, countries, path, tip, data, selection);
 
         });
 
