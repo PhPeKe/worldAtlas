@@ -4,27 +4,24 @@ window.onload = function() {
   var size = {};
       size.margin = {top: 20, right: 0, bottom: 20, left: 50},
       size.width = 960,
-      size.height = 600,
-      margin = {top: 20, right: 0, bottom: 20, left: 50},
-      width = 960,
-      height = 600,
-      format = d3.format(","),
-      path = d3.geoPath(),
-      selection = {};
-      selection.year = "2010",
-      selection.series = "life_exp",
-      selection.countries = ["world"],
-      selection.mode = "countries",
-      selectWorld = d3.select("svg g rect"),
-      input = d3.selectAll("input.linegraph"),
-      inputMode = d3.selectAll("input.mode"),
-      parseTime = d3.timeParse("%Y"),
-      tip = makeTooltip(selection),
-      lineTip = makeLineTooltip(selection),
-      world = prepareWorld(size, tip),
-      marimekko = makeMarimekko(size),
-      map = world[0],
-      path = world[1];
+      size.height = 600;
+  var selection = {};
+      selection.year = "2010";
+      selection.series = "life_exp";
+      selection.countries = ["world"];
+      selection.mode = "countries";
+  var format = d3.format(",");
+  var path = d3.geoPath();
+  var selectWorld = d3.select("svg g rect");
+  var input = d3.selectAll("input.linegraph");
+  var inputMode = d3.selectAll("input.mode");
+  var parseTime = d3.timeParse("%Y");
+  var tip = makeTooltip(selection);
+  var lineTip = makeLineTooltip(selection);
+  var world = prepareWorld(size, tip);
+  var linegraph = makeLinegraph(size);
+  var map = world[0];
+  var path = world[1];
 
   // Load in data
   queue()
@@ -72,20 +69,21 @@ window.onload = function() {
     // Get statistics and z-scores for all entrys
     var stats = getStats(data);
 
-    drawWorld(map, stats, countries, path, tip, data, selection);
-    drawLinegraph(data, stats, selection, width, height, margin);
+    drawWorld(map, stats, countries, path, tip, data, selection, size);
+    drawLinegraph(data, stats, selection, size);
+    drawStackedBarchart(data, stats, selection, size);
 
     // Set listener for selectig the world
     selectWorld.on('click', function() {
       selection.countries = [];
       selection.countries = ["world"];
-      drawLinegraph(data, stats, selection, width, height, margin);
+      drawLinegraph(data, stats, selection, size);
     });
 
     input.on("click", function() {
       selection.series = d3.select(this).attr("id");
-      drawWorld(map, stats, countries, path, tip, data, selection);
-      drawLinegraph(data, stats, selection, width, height, margin);
+      drawWorld(map, stats, countries, path, tip, data, selection, size);
+      drawLinegraph(data, stats, selection, size);
     });
 
     inputMode.on("click", function() {

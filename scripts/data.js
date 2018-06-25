@@ -269,7 +269,7 @@ function getLineData(data, stats, selection) {
       object.year = +key;
       object.iso = "000";
       if(isNaN(stats[selection.series].meanByYearZ[key])) object.value = undefined;
-      else object.value = stats[selection.series].meanByYearZ[key];
+      else object.value = stats[selection.series].meanByYear[key];
       object.seriesName = data["004"].series[selection.series].series;
       object.name = "world";
       lineData["world"].push(object);
@@ -288,7 +288,7 @@ function getLineData(data, stats, selection) {
       object.year = +year;
       object.iso = selectedCountry;
       if(isNaN(data[selectedCountry].series[selection.series].zscores[year])) object.value = undefined;
-      else object.value = data[selectedCountry].series[selection.series].zscores[year];
+      else object.value = data[selectedCountry].series[selection.series].values[year];
       object.seriesName = data[selectedCountry].series[selection.series].series;
       object.name = data[selectedCountry].name;
       otherObject[selectedCountry].push(object);
@@ -299,19 +299,20 @@ function getLineData(data, stats, selection) {
 }
 
 
-function getMarimekkoData (data, stats, selection) {
-  marimekkoData = [];
+function getBarData(data, stats, selection) {
+  var barData = [];
 
   if(selection.countries == "world") {
     for(series in stats) {
-      var name = world;
-      var series = series;
-      var seriesName = data["004"].series[series].series;
-      var value = stats[series].meanZ;
+      var object = {};
+      object.name = "world";
+      object.series = series;
+      object.seriesName = data["004"].series[series].series;
+      object.value = stats[series].mean;
+      barData.push(object);
     }
-
-    console.log(marimekkoData);
-    return marimekkoData;
+    console.log(barData);
+    return barData;
   }
 
   for(country in selection.countries) {
@@ -319,7 +320,6 @@ function getMarimekkoData (data, stats, selection) {
     for(series in data[country].series) {
       var seriesName = data[country].series[series].series;
       var series = series;
-
     }
   }
 }

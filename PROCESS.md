@@ -101,3 +101,11 @@ Aggregate data
 - Highlight selected countries on worldmap
 
 # 23-06
+- Marimekko chart does not work for the intended purpose
+  - Changing to grouped barchart to compare between countries
+
+# 25-06
+- Preparing data for stacked barchart
+- Implementing tooltip and linelabels for linegraph
+- Drawing Stacked barchart
+- Implementing tooltip for barchart

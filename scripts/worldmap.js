@@ -29,13 +29,10 @@ function prepareWorld(size, tip) {
 }
 
 
-function drawWorld(map, stats, countries, path, tip, data, selection) {
-  var margin = {top: 20, right: 0, bottom: 20, left: 50},
-      width = 960,
-      height = 600;
+function drawWorld(map, stats, countries, path, tip, data, selection, size) {
 
   d3.selectAll(".countries").remove();
-
+  
   var domain = getDomain(data, selection);
 
   // Set function that is returning color appropriate to value
@@ -96,7 +93,7 @@ function drawWorld(map, stats, countries, path, tip, data, selection) {
             selection.countries.splice(index,1);
           }
           if(selection.countries.length == 0) selection.countries = ["world"];
-          drawLinegraph(data, stats, selection, width, height, margin);
+          drawLinegraph(data, stats, selection, size);
         }
 
         });

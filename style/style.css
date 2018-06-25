@@ -69,3 +69,8 @@ div.controls {
   left: 0;
   top: 0;
 }
+
+div.tooltip {
+  position: absolute;
+  text-align : center;
+}
