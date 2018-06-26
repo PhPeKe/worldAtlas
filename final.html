@@ -16,7 +16,10 @@
   <script src="scripts/d3/topojson.v1.min.js"></script>
   <script src="scripts/d3/d3-simple-slider.js"></script>
   <script src="scripts/d3/d3-tip.js"></script>
+  <script src="https://unpkg.com/d3-simple-slider@0.2.1/build/d3-simple-slider.js"></script>
   <script src="scripts/d3/d3CheckBox.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+  crossorigin="anonymous">
   <script src="scripts/d3/d3-dsv.min.js"></script>
   <script src="scripts/d3/bootstrap.min.js"></script>
   <script src="scripts/worldmap.js" charset="utf-8"></script>
@@ -39,31 +42,42 @@
   </p>
 </div>
 <div class="map"></div>
+<div class="container">
+  <p>Set year</p>
+  <div class="row align-items-center">
+    <div class="col-sm-2">
+      <p id="value1" style="width : 200px"></p>
+    </div>
+    <div class="col-sm">
+      <div id="slider"></div>
+    </div>
+  </div>
+</div>
 <div class="controls" style="width: 960px">
   <fieldset>
-    <input class="linegraph" type="radio" id="life_exp" name="linegraph" checked = "checked">
+    <input class="lineButton" type="radio" id="life_exp" name="lineButton" checked = "checked">
     <label for="life_exp"> Life Expectancy at birth</label>
     <br>
-    <input class="linegraph" type="radio" id="gdp_pc" name="linegraph">
+    <input class="lineButton" type="radio" id="gdp_pc" name="lineButton">
     <label for="gdp_pc"> GDP per Capita</label>
     <br>
-    <input class="linegraph" type="radio" id="mil_exp" name="linegraph">
+    <input class="lineButton" type="radio" id="mil_exp" name="lineButton">
     <label for="mil_exp"> Military expenditure (% of GDP)</label>
     <br>
-    <input class="linegraph" type="radio" id="arms_exp" name="linegraph">
+    <input class="lineButton" type="radio" id="arms_exp" name="lineButton">
     <label for="arms_exp"> Arms exported</label>
     <br>
-    <input class="linegraph" type="radio" id="arms_imp" name="linegraph">
+    <input class="lineButton" type="radio" id="arms_imp" name="lineButton">
     <label for="arms_imp"> Arms imported</label>
     <br>
-    <input class="linegraph" type="radio" id="arms_pers" name="linegraph">
+    <input class="lineButton" type="radio" id="arms_pers" name="lineButton">
     <label for="arms_pers"> Armed personell (% of labour force)</label>
   </fieldset>
-  <input class="mode" type="checkbox" id="mode" name="marimekko">
+  <input class="mode" type="checkbox" id="mode">
   <label for="mode"> Toggle mode</label>
 </div>
 <div id="linegraph" class="linegraph"></div>
-<div id="marimekko" class="marimekko"></div>
+<div id="barchart"></div>
 <div class ="info">
   <p id="info">
           <strong>Name:</strong> Phillip Kersten<br>

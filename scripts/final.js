@@ -2,7 +2,7 @@ window.onload = function() {
 
   // Declare all necessary variables
   var size = {};
-      size.margin = {top: 20, right: 0, bottom: 20, left: 50},
+      size.margin = {top: 20, right: 50, bottom: 20, left: 50},
       size.width = 960,
       size.height = 600;
   var selection = {};
@@ -13,7 +13,7 @@ window.onload = function() {
   var format = d3.format(",");
   var path = d3.geoPath();
   var selectWorld = d3.select("svg g rect");
-  var input = d3.selectAll("input.linegraph");
+  var input = d3.selectAll("input.lineButton");
   var inputMode = d3.selectAll("input.mode");
   var parseTime = d3.timeParse("%Y");
   var tip = makeTooltip(selection);
@@ -69,9 +69,36 @@ window.onload = function() {
     // Get statistics and z-scores for all entrys
     var stats = getStats(data);
 
+
+
     drawWorld(map, stats, countries, path, tip, data, selection, size);
     drawLinegraph(data, stats, selection, size);
     drawStackedBarchart(data, stats, selection, size);
+
+    var years = [];
+    var formatYear = d3.timeFormat("%Y");
+    for(year in data["004"].series["life_exp"].values) years.push(new Date(year));
+
+    var slider = d3.sliderHorizontal()
+      .min(years[0]) //Magic number to prevent that domain[0] is reached at the end of the scale
+      .max(years[years.length-1])
+      .step(1000 * 60 * 60 * 24 * 365)
+      .width(450)
+      .default(new Date(selection.year))
+      .tickFormat(d3.timeFormat("%Y"))
+      .on('onchange', function(d) {
+        console.log(formatYear(d));
+        selection.year = formatYear(d);
+        drawWorld(map, stats, countries, path, tip, data, selection, size);
+      });
+
+    var g = d3.select("div#slider").append("svg")
+      .attr("width", 500)
+      .attr("height", 100)
+      .append("g")
+      .attr("transform", "translate(30,30)");
+
+    g.call(slider);
 
     // Set listener for selectig the world
     selectWorld.on('click', function() {
@@ -89,8 +116,10 @@ window.onload = function() {
     inputMode.on("click", function() {
       if(selection.mode == "countries") {
         selection.mode = "series";
+        d3.selectAll(".lineButton").attr("type","checkbox");
       } else {
         selection.mode = "countries";
+        d3.selectAll(".lineButton").attr("type","radio");
       }
       console.log(selection.mode);
     });

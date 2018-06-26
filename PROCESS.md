@@ -109,3 +109,12 @@ Aggregate data
 - Implementing tooltip and linelabels for linegraph
 - Drawing Stacked barchart
 - Implementing tooltip for barchart
+
+# 26-06
+- Prepared data for barchart
+- implementing slider for dates
+- drawing barchart
+- Barchart works with selection on map and linegraph
+- missing datasource is finally available
+- Next: loading in missing data for Worldmap
+- Different data for worldmap and linegraph

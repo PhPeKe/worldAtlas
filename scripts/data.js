@@ -223,7 +223,7 @@ function getStats(data) {
 
   // Get z-scores per country per series (z = (x – mean) / var)
   // Get z-scores per series (z = (x – μ) / σ)
-  // What is a zascore? - http://www.statisticshowto.com/probability-and-statistics/z-score/
+  // What is a z-score? - http://www.statisticshowto.com/probability-and-statistics/z-score/
   for(country in data) {
     for(series in data[country].series) {
       for(year in data[country].series[series].values) {
@@ -305,21 +305,22 @@ function getBarData(data, stats, selection) {
   if(selection.countries == "world") {
     for(series in stats) {
       var object = {};
-      object.name = "world";
       object.series = series;
-      object.seriesName = data["004"].series[series].series;
-      object.value = stats[series].mean;
+      object.world = stats[series].mean;
       barData.push(object);
     }
-    console.log(barData);
     return barData;
   }
 
-  for(country in selection.countries) {
-    var name = data[country];
-    for(series in data[country].series) {
-      var seriesName = data[country].series[series].series;
-      var series = series;
-    }
+  for(series in data[country].series) {
+    var object = {};
+    object.series = series;
+    object.total = 0;
+    selection.countries.forEach(function(country) {
+      object[country] = data[country].series[series].mean;
+      object.total += data[country].series[series].mean;
+    });
+    barData.push(object);
   }
+  return barData;
 }

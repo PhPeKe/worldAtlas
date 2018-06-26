@@ -32,13 +32,15 @@ function prepareWorld(size, tip) {
 function drawWorld(map, stats, countries, path, tip, data, selection, size) {
 
   d3.selectAll(".countries").remove();
-  
+  d3.selectAll(".path").remove();
+
   var domain = getDomain(data, selection);
 
   // Set function that is returning color appropriate to value
-  color = d3.scaleLinear()
+  var color = d3.scaleLinear()
     .domain(domain)
     .range(['#ff0000','#00ff00']);
+
 
   // Append countries to world-map svg
   map.append("g")
@@ -94,6 +96,7 @@ function drawWorld(map, stats, countries, path, tip, data, selection, size) {
           }
           if(selection.countries.length == 0) selection.countries = ["world"];
           drawLinegraph(data, stats, selection, size);
+          drawStackedBarchart(data, stats, selection, size);
         }
 
         });

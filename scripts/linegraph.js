@@ -13,7 +13,16 @@ function makeLinegraph(size) {
 
 function drawLinegraph(data, stats, selection, size) {
 
-  var lineTip = makeLineTooltip(selection);
+  var lineTip = d3.tip()
+                .attr('class', 'd3-tip line')
+                .offset([0, 0])
+                .html(function(d){
+                  return d[0].seriesName
+                        +"<br>"
+                        +"in: "
+                        +d[0].name;
+                      });
+
 
   // Remove old elements before drawing
   d3.selectAll(".graph").remove();
@@ -84,22 +93,22 @@ function drawLinegraph(data, stats, selection, size) {
           selection.countries.splice(selection.countries.indexOf(d[0].iso),1);
           if(selection.countries.length == 0) selection.countries = ["world"];
           drawLinegraph(data, stats, selection, size);
+          drawStackedBarchart(data, stats, selection, size);
+          lineTip.hide(d);
         })
         .on("mouseover", function(d) {
-          var tip = d3.selectAll(".d3-tip line");
-          console.log(d3.select(".d3-tip line"));
-          tip.attr("id",3);
+          let xPos = d3.mouse(this)[0];
+          let yPos = d3.mouse(this)[1];
+// ToDo: Tooltip just works with one line
+          console.log("X:",xPos,"Y:",yPos);
+          xPos = xPos - 480;
+          lineTip.offset([yPos - 15, xPos]);
           lineTip.show(d);
         })
-        .on("mouseout", function(d) {
+        .on("mouseout",  function(d) {
           lineTip.hide(d);
         })
         .on("mousemove", function(d) {
-          let xPos = d3.mouse(this)[0];
-          let yPos = d3.mouse(this)[1];
-          console.log(xPos,yPos);
-          tip.style("left", xPos + "px")
-            .style("top", yPos + "px");
         })
         .on("dblclick", function(d) {
           console.log("One Click");
