@@ -2,6 +2,8 @@
 window.onload = function() {
   var frame = document.getElementById("frame");
   var svg = d3.select(frame).append("svg");
+  d3.selectAll(".overlay").style("width", frame.offsetWidth + 10).style("height", frame.clientHeight + 10);
+  d3.selectAll("#overlay").selectAll("rect").attr("width", frame.offsetWidth + 10).attr("height", frame.clientHeight + 10);
   console.log(frame.offsetWidth, frame.clientHeight);
   // Declare all necessary variables
   var size = {};
@@ -33,16 +35,20 @@ window.onload = function() {
     .defer(d3.csv, "data/arms_exp.csv")
     .defer(d3.csv, "data/arms_imp.csv")
     .defer(d3.csv, "data/arms_pers.csv")
+    .defer(d3.csv, "data/cwar_intensity.csv")
+    .defer(d3.csv, "data/battle_death.csv")
     .await(ready);
 
 
   // Wait until data is loaded and then proceed with drawing the map and other
   // objects
-  function ready(error, world, iso, gdp_pc, life_exp, mil_exp, arms_exp, arms_imp, arms_pers) {
+  function ready(error, world, iso, gdp_pc, life_exp, mil_exp, arms_exp, arms_imp, arms_pers, cwar_intensity, battle_death) {
     if (error) {
       alert("Data failed to load");
       throw(error);
     }
+
+    console.log("New datazz",cwar_intensity, battle_death);
 
     // Make countries readable for worldmap
     var countries = topojson.feature(world, world.objects.countries).features;
@@ -61,17 +67,14 @@ window.onload = function() {
     // Aggregate data
     var data = aggregateData(allData);
 
-    var years = [];
-    for (key in data["004"].series[selection.series].values) {
-      years.push(new Date (key));
-    }
-
     // Get statistics and z-scores for all entrys
     var stats = getStats(data);
 
+    // Draw visualizations
     drawWorld(stats, countries, data, selection, size);
     drawLinegraph(data, stats, selection, size, countries);
     drawStackedBarchart(data, stats, selection, size, countries);
+
 
     var years = [];
     var formatYear = d3.timeFormat("%Y");
@@ -105,11 +108,15 @@ window.onload = function() {
       drawWorld(stats, countries, data, selection, size);
       drawLinegraph(data, stats, selection, size, countries);
       drawStackedBarchart(data, stats, selection, size, countries);
-
+      d3.selectAll(".overlay").style("width", frame.offsetWidth + 10).style("height", frame.clientHeight + 10);
+      d3.selectAll("#overlay").selectAll("rect").attr("width", frame.offsetWidth + 10).attr("height", frame.clientHeight + 10);
       console.log(frame.offsetWidth, frame.clientHeight);
     }
 
-
+    var info = d3.select("#info");
+    info.append("p").html("<strong>Name: </strong> Phillip Kersten");
+    info.append("p").html("<strong>Studentnr: </strong> 10880682");
+    info.append("p").html('<strong>Source: </strong> <a target="_blank" href="http://databank.worldbank.org/data/reports.aspx?source=global-bilateral-migration">Worldbank</a>');
     // Set listener for selectig the world
     selectWorld.on('click', function() {
       selection.countries = [];
@@ -128,6 +135,10 @@ window.onload = function() {
         d3.selectAll(".lineButton").attr("type","radio");
       }
       console.log(selection.mode);
+    });
+
+    d3.selectAll("#x").on("click", function() {
+      d3.selectAll("div#overlay").remove();
     });
   }
 }

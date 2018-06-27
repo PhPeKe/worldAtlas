@@ -327,7 +327,6 @@ function getBarData(data, stats, selection) {
 
 
 function setCurrentSize(size) {
-  console.log(frame.offsetWidth, frame.clientHeight);
   size.width = frame.offsetWidth;
   size.height = frame.clientHeight;
 }

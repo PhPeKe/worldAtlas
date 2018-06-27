@@ -27,20 +27,20 @@
   <script src="scripts/final.js" charset="utf-8"></script>
 </head>
 <body>
-  <div class="title"></div>
   <div id="frame">
-  <div id="top">
-  <svg width="50" height = "50" fill="green">
-    <g transform="translate(5,5)">
-      <rect height="20" width="20" fill="red"/>
-    </g>
-  </svg>
-</div>
+    <div id="overlay">
+      <svg class="overlay">
+        <g>
+          <rect height="10000" width="10000" fill="white"/></rect>
+        </g>
+        <p id="x">Go to visualizations</p>
+      </svg>
+    </div>
+    <div class="title"></div>
   <div class="map"></div>
   <div id="linegraph" class="linegraph"></div>
   <div id="barchart"></div>
   <div class="container">
-    <p>Set year</p>
     <div class="row align-items-center">
       <div class="col-sm-2">
         <p id="value1" style="width : 200px;"></p>
@@ -50,15 +50,14 @@
       </div>
     </div>
   </div>
-  <div class ="drop">
-  <div class ="info">
-    <p id="info">
-      <strong>Name:</strong> Phillip Kersten<br>
-      <strong>Studentnr:</strong> 10880682<br>
-      <strong>Source: </strong>
-      <a target="_blank" href="final0.html">Next Page</a>
-      <a target="_blank" href="http://databank.worldbank.org/data/reports.aspx?source=global-bilateral-migration">Worldbank</a>
-    </p>
-  </div></div>
+  <div id="top">
+  <svg width="20" height = "20" fill="green">
+    <g transform="translate(5,5)">
+      <rect height="20" width="20" fill="red"/>
+    </g>
+  </svg>
+</div>
+  <div id="info"></div>
+  </div>
 </body>
 </html>

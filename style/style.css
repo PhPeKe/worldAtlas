@@ -11,11 +11,7 @@
 .background {
   display: block;
 }
-div, form, fieldset {
-  display: block ;
-  margin: auto;
-  text-align: center ;
-}
+
 path.linegraph, .country{ cursor: pointer; }
 
 g.linelabes { cursor: pointer !important; }
@@ -55,11 +51,13 @@ g.linelabes { cursor: pointer !important; }
 line.track-overlay {
   display : inline-block
   text-align: center;
+  position: absolute;
 }
 div.subtitle {
   text-align: center;
   width: 960px;
   border: 1px solid black;
+  position: absolute;
 }
 
 .checkbox {
@@ -77,16 +75,51 @@ div.tooltip {
 
 div.info, div.controls{
   display : inline-block;
+  position: absolute;
 }
 
 div.map {
   float : left;
+  position: absolute;
+  bottom: 0;
+  z-index : -1;
 }
 
-div.linegraph, #barchart {
-  float : right;
+div.linegraph {
+  position: absolute;
+  right : 0;
+  z-index : -1;
+}
+
+div#barchart {
+  float: right;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index : -1;
 }
 
 div.container {
-  float: left;
+  position:absolute;
+  right: 0;
+}
+
+div.frame {
+  position : relative;
+}
+
+div.overlay {
+  position :absolute;
+  z-index: 1;
+}
+
+#frame {
+  z-index : -1;
+}
+
+#x {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index : 2;
 }
