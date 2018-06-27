@@ -1,23 +1,22 @@
 function makeLinegraph(size) {
   //Prepare Linegraph
   var linegraph = d3.select("div.linegraph")
-          .append("svg")
-            .attr("width", size.width + size.margin.left + size.margin.right)
-            .attr("height", size.height + size.margin.top + size.margin.bottom)
-            .attr("class", "graph")
-          .append('g')
-            .attr("transform", "translate(" + size.margin.left + "," + size.margin.top + ")");
+    .append("svg")
+      .attr("width", size.width + size.margin.left + size.margin.right)
+      .attr("height", size.height + size.margin.top + size.margin.bottom)
+      .attr("class", "graph")
+    .append('g')
+      .attr("transform", "translate(" + size.margin.left + "," + size.margin.top + ")");
   return linegraph;
 }
 
 
-function drawLinegraph(data, stats, selection, size) {
+function drawLinegraph(data, stats, selection, size, countries) {
 
   setCurrentSize(size);
-
-      size.margin = {top: 0, right: 50, bottom: 20, left: 50},
-      size.width = ((size.width/ 100) * 35) - size.margin.left - size.margin.right,
-      size.height = ((size.height/100)* 40) - size.margin.bottom - size.margin.top;
+  size.margin = {top: size.height / 20, right: size.width / 20, bottom: size.height / 20, left: size.width/20},
+  size.width = ((size.width/ 100) * 45) - size.margin.left - size.margin.right,
+  size.height = ((size.height/100)* 45) - size.margin.bottom - size.margin.top;
 
   var lineTip = d3.tip()
                 .attr('class', 'd3-tip line')
@@ -92,6 +91,7 @@ function drawLinegraph(data, stats, selection, size) {
         .attr("stroke-width", 6)
         .attr("d", line)
         .on("click", function(d) {
+          lineTip.hide(d);
           if(selection.countries == "world") {
             return;
           }
@@ -101,9 +101,8 @@ function drawLinegraph(data, stats, selection, size) {
           console.log("Size before",size);
           setCurrentSize(size);
           console.log("Size after", size);
-          drawLinegraph(data, stats, selection, size);
-          drawStackedBarchart(data, stats, selection, size);
-          lineTip.hide(d);
+          drawLinegraph(data, stats, selection, size, countries);
+          drawStackedBarchart(data, stats, selection, size, countries);
         })
         .on("mouseover", function(d) {
           let xPos = d3.mouse(this)[0];

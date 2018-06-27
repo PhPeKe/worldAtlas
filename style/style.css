@@ -62,10 +62,6 @@ div.subtitle {
   border: 1px solid black;
 }
 
-div.controls {
-  border: 1px solid black;
-}
-
 .checkbox {
   display: inline-block;
   vertical-align: top;
@@ -73,20 +69,18 @@ div.controls {
   position: relative;
 }
 
-.checkbox input {
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-
 div.tooltip {
   position: absolute;
-  text-align : center;
+  text-align : left;
 }
 
 
-div.map, div.info, div.controls{
-  display : inline-block
+div.info, div.controls{
+  display : inline-block;
+}
+
+div.map {
+  float : left;
 }
 
 div.linegraph, #barchart {
@@ -95,9 +89,4 @@ div.linegraph, #barchart {
 
 div.container {
   float: left;
-}
-
-
-div.map {
-  float:left;
 }
