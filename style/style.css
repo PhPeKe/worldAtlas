@@ -1,4 +1,13 @@
 /*style.css Phillip Kersten s10880682*/
+
+#frame {
+  position: fixed;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+}
+
 .background {
   display: block;
 }
@@ -44,7 +53,7 @@ g.linelabes { cursor: pointer !important; }
   text-align: center;
 }
 line.track-overlay {
-  display : block;
+  display : inline-block
   text-align: center;
 }
 div.subtitle {
@@ -73,4 +82,22 @@ div.controls {
 div.tooltip {
   position: absolute;
   text-align : center;
+}
+
+
+div.map, div.info, div.controls{
+  display : inline-block
+}
+
+div.linegraph, #barchart {
+  float : right;
+}
+
+div.container {
+  float: left;
+}
+
+
+div.map {
+  float:left;
 }

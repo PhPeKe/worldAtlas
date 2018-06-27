@@ -1,27 +1,27 @@
-window.onload = function() {
 
+window.onload = function() {
+  var frame = document.getElementById("frame");
+  var svg = d3.select(frame).append("svg");
+  console.log(frame.offsetWidth, frame.clientHeight);
   // Declare all necessary variables
   var size = {};
       size.margin = {top: 20, right: 50, bottom: 20, left: 50},
-      size.width = 960,
-      size.height = 600;
+      size.width = frame.offsetWidth ,
+      size.height = frame.clientHeight;
   var selection = {};
       selection.year = "2010";
       selection.series = "life_exp";
       selection.countries = ["world"];
       selection.mode = "countries";
   var format = d3.format(",");
-  var path = d3.geoPath();
   var selectWorld = d3.select("svg g rect");
   var input = d3.selectAll("input.lineButton");
   var inputMode = d3.selectAll("input.mode");
   var parseTime = d3.timeParse("%Y");
   var tip = makeTooltip(selection);
   var lineTip = makeLineTooltip(selection);
-  var world = prepareWorld(size, tip);
-  var linegraph = makeLinegraph(size);
-  var map = world[0];
-  var path = world[1];
+
+
 
   // Load in data
   queue()
@@ -69,9 +69,7 @@ window.onload = function() {
     // Get statistics and z-scores for all entrys
     var stats = getStats(data);
 
-
-
-    drawWorld(map, stats, countries, path, tip, data, selection, size);
+    drawWorld(stats, countries, tip, data, selection, size);
     drawLinegraph(data, stats, selection, size);
     drawStackedBarchart(data, stats, selection, size);
 
@@ -89,7 +87,7 @@ window.onload = function() {
       .on('onchange', function(d) {
         console.log(formatYear(d));
         selection.year = formatYear(d);
-        drawWorld(map, stats, countries, path, tip, data, selection, size);
+        drawWorld(stats, countries, tip, data, selection, size);
       });
 
     var g = d3.select("div#slider").append("svg")
@@ -100,16 +98,28 @@ window.onload = function() {
 
     g.call(slider);
 
+    window.onresize = function() {
+      size.width = frame.clientWidth;
+      size.height = frame.clientHeight;
+      drawWorld(stats, countries, tip, data, selection, size);
+      drawLinegraph(data, stats, selection, size);
+      drawStackedBarchart(data, stats, selection, size);
+
+      console.log(frame.offsetWidth, frame.clientHeight);
+    }
+
+
     // Set listener for selectig the world
     selectWorld.on('click', function() {
       selection.countries = [];
       selection.countries = ["world"];
       drawLinegraph(data, stats, selection, size);
+      drawStackedBarchart(data, stats, selection, size);
     });
 
     input.on("click", function() {
       selection.series = d3.select(this).attr("id");
-      drawWorld(map, stats, countries, path, tip, data, selection, size);
+      drawWorld(stats, countries, tip, data, selection, size);
       drawLinegraph(data, stats, selection, size);
     });
 

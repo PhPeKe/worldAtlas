@@ -30,60 +30,63 @@
   <script src="scripts/final.js" charset="utf-8"></script>
 </head>
 <body>
-<div class="title"></div>
-<svg width="50" height = "50" fill="green">
-  <g transform="translate(5,5)">
-    <rect height="20" width="20" fill="red"/>
-  </g>
-</svg>
-<div class="subtitle" >
-  <p>
-     <br> TEXT HERE
-  </p>
-</div>
-<div class="map"></div>
-<div class="container">
-  <p>Set year</p>
-  <div class="row align-items-center">
-    <div class="col-sm-2">
-      <p id="value1" style="width : 200px"></p>
+  <div id="frame">
+    <div class="title"></div>
+      <svg width="50" height = "50" fill="green">
+        <g transform="translate(5,5)">
+          <rect height="20" width="20" fill="red"/>
+        </g>
+      </svg>
+    <div class="subtitle" >
+      <p>
+         <br> TEXT HERE
+      </p>
     </div>
-    <div class="col-sm">
-      <div id="slider"></div>
+    <div class="map"></div>
+    <div class="controls" style="width: 200px">
+      <fieldset>
+        <input class="lineButton" type="radio" id="life_exp" name="lineButton" checked = "checked">
+        <label for="life_exp"> Life Expectancy at birth</label>
+        <br>
+        <input class="lineButton" type="radio" id="gdp_pc" name="lineButton">
+        <label for="gdp_pc"> GDP per Capita</label>
+        <br>
+        <input class="lineButton" type="radio" id="mil_exp" name="lineButton">
+        <label for="mil_exp"> Military expenditure (% of GDP)</label>
+        <br>
+        <input class="lineButton" type="radio" id="arms_exp" name="lineButton">
+        <label for="arms_exp"> Arms exported</label>
+        <br>
+        <input class="lineButton" type="radio" id="arms_imp" name="lineButton">
+        <label for="arms_imp"> Arms imported</label>
+        <br>
+        <input class="lineButton" type="radio" id="arms_pers" name="lineButton">
+        <label for="arms_pers"> Armed personell (% of labour force)</label>
+      </fieldset>
+      <input class="mode" type="checkbox" id="mode">
+      <label for="mode"> Toggle mode</label>
+    </div>
+    <div id="linegraph" class="linegraph"></div>
+    <div id="barchart"></div>
+    <div class="container">
+      <p>Set year</p>
+      <div class="row align-items-center">
+        <div class="col-sm-2">
+          <p id="value1" style="width : 200px;"></p>
+        </div>
+        <div class="col-sm">
+          <div id="slider"></div>
+        </div>
+      </div>
+    </div>
+    <div class ="drop">
+    <div class ="info">
+      <p id="info">
+        <strong>Name:</strong> Phillip Kersten<br>
+        <strong>Studentnr:</strong> 10880682<br>
+        <strong>Source: </strong>
+      </p>
     </div>
   </div>
-</div>
-<div class="controls" style="width: 960px">
-  <fieldset>
-    <input class="lineButton" type="radio" id="life_exp" name="lineButton" checked = "checked">
-    <label for="life_exp"> Life Expectancy at birth</label>
-    <br>
-    <input class="lineButton" type="radio" id="gdp_pc" name="lineButton">
-    <label for="gdp_pc"> GDP per Capita</label>
-    <br>
-    <input class="lineButton" type="radio" id="mil_exp" name="lineButton">
-    <label for="mil_exp"> Military expenditure (% of GDP)</label>
-    <br>
-    <input class="lineButton" type="radio" id="arms_exp" name="lineButton">
-    <label for="arms_exp"> Arms exported</label>
-    <br>
-    <input class="lineButton" type="radio" id="arms_imp" name="lineButton">
-    <label for="arms_imp"> Arms imported</label>
-    <br>
-    <input class="lineButton" type="radio" id="arms_pers" name="lineButton">
-    <label for="arms_pers"> Armed personell (% of labour force)</label>
-  </fieldset>
-  <input class="mode" type="checkbox" id="mode">
-  <label for="mode"> Toggle mode</label>
-</div>
-<div id="linegraph" class="linegraph"></div>
-<div id="barchart"></div>
-<div class ="info">
-  <p id="info">
-          <strong>Name:</strong> Phillip Kersten<br>
-          <strong>Studentnr:</strong> 10880682<br>
-          <strong>Source: </strong>
-  </p>
-</div>
 </body>
 </html>

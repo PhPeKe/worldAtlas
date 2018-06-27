@@ -1,41 +1,43 @@
 function prepareWorld(size, tip) {
 
+
   // Prepare map
   var map = d3.select("div.map")
   .append("svg")
-  .attr("width", size.width)
-  .attr("height", size.height)
+    .attr("class", "mapsvg")
+    .attr("width", size.width)
+    .attr("height", size.height)
   .append('g')
-  .attr('class', 'map')
+    .attr('class', 'map')
   .call(d3.zoom()
-  .scaleExtent([1,Infinity])
-  .translateExtent([[0,0],[size.width, size.height]])
-  .extent([[0,0],[size.width, size.height]])
-  .on("zoom",  function () {
-    map.attr("transform", d3.event.transform);
+    .scaleExtent([1,Infinity])
+    .translateExtent([[0,0],[size.width, size.height]])
+    .extent([[0,0],[size.width, size.height]])
+    .on("zoom",  function () {
+      map.attr("transform", d3.event.transform);
   }));
 
-  // Set projection for map
-  var projection = d3.geoMercator()
-  .scale(130)
-  .translate( [size.width / 2, size.height / 1.5]);
-
-  // Set path for map
-  var path = d3.geoPath().projection(projection);
 
   map.call(tip);
 
-  return [map,path];
+  return map;
 }
 
 
-function drawWorld(map, stats, countries, path, tip, data, selection, size) {
-
+function drawWorld(stats, countries, tip, data, selection, size) {
   d3.selectAll(".countries").remove();
   d3.selectAll(".path").remove();
-
+  d3.selectAll(".mapsvg").remove();
+  var temp = size;
+  var size = {};
+      size.margin = {top: 0, right: 0, bottom: 0, left: 0},
+      size.width = temp.width / 2,
+      size.height = temp.height/10*6;
+  var projection = d3.geoMercator()
+  .translate( [size.width / 2, size.height / 1.5]);
+  var path = d3.geoPath().projection(projection);
   var domain = getDomain(data, selection);
-
+  var map = prepareWorld(size, tip);
   // Set function that is returning color appropriate to value
   var color = d3.scaleLinear()
     .domain(domain)
@@ -52,11 +54,6 @@ function drawWorld(map, stats, countries, path, tip, data, selection, size) {
       .attr("selected","false")
       .attr("class","country")
       .attr("id", function(d) { return d.id; })
-      .style("fill", function(d) { return color(data[d.id].series[selection.series].values[selection.year]); })
-      .style('stroke', 'white')
-      .style('stroke-width', 0.3)
-      .style("opacity",0.8)
-      // tooltips
       .on('mouseover',function(d){
         tip.show(d);
 
@@ -77,6 +74,7 @@ function drawWorld(map, stats, countries, path, tip, data, selection, size) {
         if(selection.countries == "world") selection.countries = [];
 
 // Later: Change borders when selected
+// tooltips
         if(d3.select(this).attr("selected") == "false") {
           d3.select(this).attr("selected", "true");
         }
@@ -95,11 +93,14 @@ function drawWorld(map, stats, countries, path, tip, data, selection, size) {
             selection.countries.splice(index,1);
           }
           if(selection.countries.length == 0) selection.countries = ["world"];
+          size = temp;
           drawLinegraph(data, stats, selection, size);
           drawStackedBarchart(data, stats, selection, size);
-        }
-
-        });
+        }})
+        .style("fill", function(d) { return color(data[d.id].series[selection.series].values[selection.year]); })
+        .style('stroke', 'white')
+        .style('stroke-width', 0.3)
+        .style("opacity",0.8);
 
   map.append("path")
       .datum(topojson.mesh(countries, function(a, b) { return a.id !== b.id; }))

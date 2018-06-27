@@ -1,7 +1,7 @@
 function makeStackedBarchart(size) {
 
   d3.selectAll(".barchart").remove();
-  var svg = d3.select("div#barchart").append("svg")
+  var svg = d3.select("#barchart").append("svg")
       .attr("class","barchart")
       .attr("width", size.width + size.margin.left + size.margin.right)
       .attr("height", size.height + size.margin.bottom + size.margin.top);
@@ -13,7 +13,12 @@ function makeStackedBarchart(size) {
 
 
 function drawStackedBarchart(data, stats, selection, size) {
-console.log(data);
+  var temp = size;
+  var size = {};
+      size.margin = {top: 0, right: 50, bottom: 20, left: 50},
+      size.width = (temp.width/3) - size.margin.left - size.margin.right,
+      size.height = (temp.height/3) - size.margin.bottom - size.margin.top;
+
   var barLabelTip = d3.tip()
               .attr('class', 'd3-tip barText')
               .offset([-10, 0])
@@ -62,7 +67,7 @@ console.log(data);
     .data(function(d) { return d;})
     .enter().append("rect")
       .attr("x", function(d) {console.log(d); return x(d.data.series); })
-      .attr("y", function(d) { return y(d[1]); })
+      .attr("y", function(d) { console.log(d); return y(d[1]); })
       .attr("height", function(d) { return y(d[0]) - y(d[1]); })
       .attr("width", x.bandwidth());
 
@@ -104,5 +109,6 @@ console.log(data);
       .on("mouseover", function(d) { barLabelTip.show(d); })
       .on("mouseout", function(d) {barLabelTip.hide(d); });
 
+    size = temp;
   legend.call(barLabelTip);
 }

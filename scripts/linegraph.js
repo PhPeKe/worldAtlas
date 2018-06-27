@@ -12,6 +12,11 @@ function makeLinegraph(size) {
 
 
 function drawLinegraph(data, stats, selection, size) {
+  var temp = size;
+  var size = {};
+      size.margin = {top: 0, right: 50, bottom: 20, left: 50},
+      size.width = (temp.width/3) - size.margin.left - size.margin.right,
+      size.height = (temp.height/3) - size.margin.bottom - size.margin.top;
 
   var lineTip = d3.tip()
                 .attr('class', 'd3-tip line')
@@ -92,6 +97,7 @@ function drawLinegraph(data, stats, selection, size) {
           // Splice list
           selection.countries.splice(selection.countries.indexOf(d[0].iso),1);
           if(selection.countries.length == 0) selection.countries = ["world"];
+          size = temp;
           drawLinegraph(data, stats, selection, size);
           drawStackedBarchart(data, stats, selection, size);
           lineTip.hide(d);
