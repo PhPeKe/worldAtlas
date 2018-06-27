@@ -324,3 +324,9 @@ function getBarData(data, stats, selection) {
   }
   return barData;
 }
+
+
+function setCurrentSize(size) {
+  size.width = frame.offsetWidth;
+  size.height = frame.clientHeight;
+}

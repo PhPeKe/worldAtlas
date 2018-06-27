@@ -118,3 +118,7 @@ Aggregate data
 - missing datasource is finally available
 - Next: loading in missing data for Worldmap
 - Different data for worldmap and linegraph
+
+# 27-06
+- Loading in new datasets for worldmap
+- Choosing for data worldmap by clicking on icons
