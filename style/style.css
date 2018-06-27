@@ -89,11 +89,11 @@ div.map, div.info, div.controls{
   display : inline-block
 }
 
-div.linegraph, #barchart {
+div.linegraph ,#barchart {
   float : right;
 }
 
-div.container {
+div.container, div.info {
   float: left;
 }
 
