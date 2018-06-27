@@ -19,6 +19,8 @@ function drawStackedBarchart(data, stats, selection, size, countries) {
   size.width = ((size.width/100)*45) - size.margin.left - size.margin.right,
   size.height = ((size.height/100)*45) - size.margin.bottom - size.margin.top;
 
+  d3.selectAll(".d3-tip.bartext").remove();
+  d3.selectAll(".d3-tip.bartext.n").remove();
   var barLabelTip = d3.tip()
               .attr('class', 'd3-tip barText')
               .offset([-10, 0])

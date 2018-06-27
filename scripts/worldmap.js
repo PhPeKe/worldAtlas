@@ -19,7 +19,7 @@ function prepareWorld(size, tip) {
 
   // Set projection for map
   var projection = d3.geoMercator()
-    .scale(((size.width - size.margin.left - size.margin.right)/size.height)*100)
+    .scale(90)//((size.width - size.margin.left - size.margin.right)/size.height)*50)
     .translate( [size.width / 1.7, size.height / 1.3]);
 
   // Set path for map
@@ -41,8 +41,8 @@ function drawWorld(stats, countries, data, selection, size) {
 
   setCurrentSize(size);
   size.margin = {top: size.height / 20, right: size.width / 15, bottom: size.height / 20, left: size.width/20},
-  size.width = ((size.width / 100) * 55) - size.margin.left - size.margin.right,
-  size.height = ((size.height / 100) * 60) - size.margin.bottom - size.margin.top;
+  size.width = ((size.width / 100) * 40) - size.margin.left - size.margin.right,
+  size.height = ((size.height / 100) * 40) - size.margin.bottom - size.margin.top;
 
   var tip = makeTooltip(selection);
   var world = prepareWorld(size, tip);

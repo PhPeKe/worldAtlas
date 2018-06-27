@@ -81,9 +81,11 @@ div.info, div.controls{
 div.map {
   float : left;
   position: absolute;
-  bottom: 0;
+  bottom: 25%;
+  left: 12%;
   z-index : -1;
 }
+
 
 div.linegraph {
   position: absolute;

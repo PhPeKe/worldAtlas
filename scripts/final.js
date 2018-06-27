@@ -112,12 +112,13 @@ window.onload = function() {
       d3.selectAll("#overlay").selectAll("rect").attr("width", frame.offsetWidth + 10).attr("height", frame.clientHeight + 10);
       console.log(frame.offsetWidth, frame.clientHeight);
     }
-
+/*
     var info = d3.select("#info");
     info.append("p").html("<strong>Name: </strong> Phillip Kersten");
     info.append("p").html("<strong>Studentnr: </strong> 10880682");
     info.append("p").html('<strong>Source: </strong> <a target="_blank" href="http://databank.worldbank.org/data/reports.aspx?source=global-bilateral-migration">Worldbank</a>');
-    // Set listener for selectig the world
+*/
+    // Set listener for selecting data on worldmap
     selectWorld.on('click', function() {
       selection.countries = [];
       selection.countries = ["world"];
@@ -126,6 +127,7 @@ window.onload = function() {
       drawStackedBarchart(data, stats, selection, size, countries);
     });
 
+    // Toggle input mode for linegraph
     inputMode.on("click", function() {
       if(selection.mode == "countries") {
         selection.mode = "series";
@@ -137,6 +139,7 @@ window.onload = function() {
       console.log(selection.mode);
     });
 
+    // Remove info-page when clicked
     d3.selectAll("#x").on("click", function() {
       d3.selectAll("div#overlay").remove();
     });

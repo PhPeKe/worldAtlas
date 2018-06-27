@@ -18,6 +18,8 @@ function drawLinegraph(data, stats, selection, size, countries) {
   size.width = ((size.width/ 100) * 45) - size.margin.left - size.margin.right,
   size.height = ((size.height/100)* 45) - size.margin.bottom - size.margin.top;
 
+  d3.selectAll("div.d3-tip.line").remove();
+  d3.selectAll("div.d3-tip.line.n").remove();
   var lineTip = d3.tip()
                 .attr('class', 'd3-tip line')
                 .offset([0, 0])
@@ -27,7 +29,9 @@ function drawLinegraph(data, stats, selection, size, countries) {
                         +"in: "
                         +d[0].name;
                       });
-
+  if((goingToMakeMistake || forgertSomething) == true) {
+    dont();
+  }
 
   // Remove old elements before drawing
   d3.selectAll(".graph").remove();
