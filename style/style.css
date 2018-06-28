@@ -25,6 +25,18 @@ g.linelabes { cursor: pointer !important; }
   font-size: 12px;
 }
 
+rect.lineOverlay {
+  position: absolute;
+  z-index: -2;
+  fill: none;
+  pointer-events: all;
+}
+
+path.linepath {
+  position: absolute;
+  z-index: 2;
+}
+
 /* Creates a small triangle extender for the tooltip */
 .d3-tip:after {
   box-sizing: border-box;
@@ -82,7 +94,8 @@ div.map {
   float : left;
   position: absolute;
   bottom: 25%;
-  left: 12%;
+  top: 5%;
+  left: 5%;
   z-index : -1;
 }
 
@@ -124,4 +137,8 @@ div.overlay {
   left: 0;
   top: 0;
   z-index : 2;
+}
+
+g.barchart {
+  cursor: pointer;
 }

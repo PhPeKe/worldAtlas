@@ -57,12 +57,14 @@ window.onload = function() {
     var allData = [];
     allData.push(iso);
     allData.push(countries);
-    allData.push(gdp_pc);
     allData.push(life_exp);
     allData.push(arms_pers);
     allData.push(arms_exp);
     allData.push(arms_imp);
     allData.push(mil_exp);
+    allData.push(cwar_intensity);
+    allData.push(battle_death);
+    allData.push(gdp_pc);
 
     // Aggregate data
     var data = aggregateData(allData);
@@ -79,27 +81,6 @@ window.onload = function() {
     var years = [];
     var formatYear = d3.timeFormat("%Y");
     for(year in data["004"].series["life_exp"].values) years.push(new Date(year));
-
-    var slider = d3.sliderHorizontal()
-      .min(years[0])
-      .max(years[years.length-1])
-      .step(1000 * 60 * 60 * 24 * 365)
-      .width(450)
-      .default(new Date(selection.year))
-      .tickFormat(d3.timeFormat("%Y"))
-      .on('onchange', function(d) {
-        console.log(formatYear(d));
-        selection.year = formatYear(d);
-        drawWorld(stats, countries, data, selection, size);
-      });
-
-    var g = d3.select("div#slider").append("svg")
-      .attr("width", 500)
-      .attr("height", 100)
-      .append("g")
-      .attr("transform", "translate(30,30)");
-
-    g.call(slider);
 
     // Redraw visualizations in appropriate size when window is resized
     window.onresize = function() {

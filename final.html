@@ -18,6 +18,7 @@
   <script src="scripts/d3/d3-tip.js"></script>
   <script src="scripts/d3/d3CheckBox.js"></script>
   <script src="scripts/d3/d3-dsv.min.js"></script>
+  <script src="scripts/d3/button.js"></script>
   <script src="scripts/d3/bootstrap.min.js"></script>
   <script src="scripts/worldmap.js" charset="utf-8"></script>
   <script src="scripts/stackedBar.js" charset="utf-8"></script>
@@ -37,19 +38,11 @@
       </svg>
     </div>
     <div class="title"></div>
-  <div class="map"></div>
+  <div class="map">
+    <h1 id="yearDisplay">Year: </h1>
+  </div>
   <div id="linegraph" class="linegraph"></div>
   <div id="barchart"></div>
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col-sm-2">
-        <p id="value1" style="width : 200px;"></p>
-      </div>
-      <div class="col-sm">
-        <div id="slider"></div>
-      </div>
-    </div>
-  </div>
   <div id="top">
   <svg width="20" height = "20" fill="green">
     <g transform="translate(5,5)">

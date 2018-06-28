@@ -311,8 +311,7 @@ function getBarData(data, stats, selection) {
     }
     return barData;
   }
-
-  for(series in data[country].series) {
+  for(series in data["004"].series) {
     var object = {};
     object.series = series;
     object.total = 0;

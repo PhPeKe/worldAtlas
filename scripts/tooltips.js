@@ -2,7 +2,7 @@ function makeTooltip(selection) {
   d3.selectAll(".d3-tip.line").remove();
   // Set tooltip
   var tip = d3.tip()
-              .attr('class', 'd3-tip line')
+              .attr('class', 'd3-tip world')
               .offset([-10, 0])
               .html(function(d){ return selection.year
                                        + "<br>"

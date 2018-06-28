@@ -37,11 +37,11 @@ function drawWorld(stats, countries, data, selection, size) {
   // Set function that is returning color appropriate to value
   var color = d3.scaleLinear()
     .domain(domain)
-    .range(['#ff0000','#00ff00']);
+    .range(['#00ff00','#0000ff']);
 
   setCurrentSize(size);
   size.margin = {top: size.height / 20, right: size.width / 15, bottom: size.height / 20, left: size.width/20},
-  size.width = ((size.width / 100) * 40) - size.margin.left - size.margin.right,
+  size.width = ((size.width / 100) * 50) - size.margin.left - size.margin.right,
   size.height = ((size.height / 100) * 40) - size.margin.bottom - size.margin.top;
 
   var tip = makeTooltip(selection);
@@ -50,7 +50,7 @@ function drawWorld(stats, countries, data, selection, size) {
   var path = world[1];
 
   // Append countries to world-map svg
-  map.append("g")
+  var graph = map.append("g")
       .attr("class", "countries")
     .selectAll("path")
       .data(countries)
@@ -59,15 +59,18 @@ function drawWorld(stats, countries, data, selection, size) {
       .attr("selected","false")
       .attr("class","country")
       .attr("id", function(d) { return d.id; })
-      .style("fill", function(d) { return color(data[d.id].series[selection.series].values[selection.year]); })
+      .style("fill", function(d) {
+        return color(data[d.id].series[selection.series].values[selection.year]);
+      })
       .style('stroke', 'white')
       .style('stroke-width', 0.3)
-      .style("opacity",0.8)
-      // tooltips
-      .on('mouseover',function(d){
+      .style("opacity",0.8);
+
+      // Listeners
+      graph.on('mouseover',function(d){
         tip.show(d);
 
-        d3.select(this)
+        d3.select(this).transition().ease(d3.easeElastic)
           .style("opacity", 1)
           .style("stroke","white")
           .style("stroke-width",3);
@@ -75,7 +78,7 @@ function drawWorld(stats, countries, data, selection, size) {
       .on('mouseout', function(d){
         tip.hide(d);
 
-        d3.select(this)
+        d3.select(this).transition().ease(d3.easeElastic)
           .style("opacity", 0.8)
           .style("stroke","white")
           .style("stroke-width",0.3);
@@ -106,7 +109,6 @@ function drawWorld(stats, countries, data, selection, size) {
           drawLinegraph(data, stats, selection, size, countries);
           drawStackedBarchart(data, stats, selection, size, countries);
         }
-
         });
 
   map.append("path")
