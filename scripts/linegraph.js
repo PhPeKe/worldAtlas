@@ -1,5 +1,8 @@
 /*linegraph.js
-  Phillip Kersten
+  Phillip Kersten 10880682
+
+  makeLinegraph:
+  - Prepare linegraph
 */
 
 function makeLinegraph(size) {
@@ -17,21 +20,23 @@ function makeLinegraph(size) {
 
 function drawLinegraph(data, stats, selection, size, countries, mapData) {
 
-  // Reset and adjust size before drawing
+  // 8.1. Reset and adjust size before drawing
   setCurrentSize(size);
   size.margin = {top: size.height / 50, right: size.width / 20, bottom: size.height / 20, left: size.width/20},
   size.width = ((size.width/ 100) * 45) - size.margin.left - size.margin.right,
   size.height = ((size.height/100)* 40) - size.margin.bottom - size.margin.top;
 
-  // Remove old elements before drawing
+  // 8.2. Remove old elements before drawing
   d3.selectAll("div.d3-tip.line").remove();
   d3.selectAll("div.d3-tip.line.n").remove();
   d3.selectAll(".graph").remove();
   d3.selectAll(".path").remove();
   d3.selectAll(".axis").remove();
 
+  // 8.3. Set variables
   var linecolors = ["#1b9e77","#7570b3","#e6ab02"];
   var lineText = {};
+  // Linetext and suffix for static tooltip
   lineText.names = {"gdp_pc": "GDP per capita",
                     "mil_exp" : "Military expenditure",
                     "life_exp" : "Life expectancy"};
@@ -42,26 +47,25 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
   var linegraph = temp[1];
   var svg = temp[0];
   var bisectDate = d3.bisector(function(d) { return d.year; }).left;
-  // Get data for drawing linegraph
+
+  // 8.4. Get data for drawing linegraph
   var lineData = getLineData(data, stats, selection);
 
-  //Prepare x,y-scale and line
+  // 8.5. Prepare x,y-scale and line
   var x = d3.scaleTime()
     .rangeRound([0, size.width]);
   var y = d3.scaleLinear()
     .rangeRound([size.height , 0]);
-  var line = d3.line().curve(d3.curveLinear) //https://bl.ocks.org/d3noob/ced1b9b18bd8192d2c898884033b5529
+  var line = d3.line().curve(d3.curveLinear)
     .defined(function(d) { return d.value; })
     .x(function(d) { return x(d.year);})
     .y(function(d) { return y(d.value);});
 
-  domainList = [];
+  var domainList = [];
 
+  // Remove old list
   d3.select(".lineList").remove();
-  var list = d3.selectAll("div#list")
-                .style("width","0")
-              .append("ul")
-                .attr("class","lineList");
+
 
   var entries = [];
   for(country in selection.countries) {
@@ -71,6 +75,12 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
       entries.push(data[selection.countries[country]].name);
     }
   }
+
+  // 8.6. Append list of generated links to wikipedia
+  var list = d3.selectAll("div#list")
+    .style("width","0")
+    .append("ul")
+    .attr("class","lineList");
 
   list.selectAll('li')
     .data(entries)
@@ -86,10 +96,7 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
       .html(String)
       .attr("class","linelabels");
 
-
-    console.log(list);
-
-
+  // Make list of all data to get domain
   for(entry in lineData) {
     lineData[entry].forEach(function(d) {
       domainList.push(d);
@@ -99,7 +106,8 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
   //Set domains
   x.domain(d3.extent(domainList, function(d) { return new Date(d.year); }));
   y.domain(d3.extent(domainList, function(d) { return d.value; }));
-  var first = true;
+
+  // 8.7. Counter, draw countries
   var i = 0;
   var focus = [];
   for(entry in lineData) {
@@ -118,11 +126,13 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
         .attr("stroke-width", 4)
         .attr("d", line);
 
+        // Append focus for tooltip
         var thisFocus = linegraph.append("g")
         .attr("class", "focus")
         .attr("id",i)
         .style("display", "none");
 
+        // Append circles
         thisFocus.append("circle")
           .attr("r", 7.5);
 
@@ -131,8 +141,6 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
           .attr("dy", ".31em");
 
         focus.push(thisFocus);
-//!!!!!!!!!!!!!!!! Compare worldwide on linechart and countrywise with stacked barchart
-    first = false;
     i+=1;
   }
 

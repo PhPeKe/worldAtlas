@@ -1,14 +1,21 @@
-
+/*main.js
+  Phillip Kersten 10880682
+  Main control-flow for the project
+*/
 window.onload = function() {
+
+  // Append overlay to get absolute size of the window
   var frame = document.getElementById("frame");
   var svg = d3.select(frame).append("svg").attr("class","randomsvg").attr("height",0);
   d3.selectAll(".overlay").style("width", frame.offsetWidth + 10).style("height", frame.clientHeight + 10);
   d3.selectAll("#overlay").selectAll("rect").attr("width", frame.offsetWidth + 10).attr("height", frame.clientHeight + 10);
-  // Declare all necessary variables
+
+  // 1. Declare all necessary variables
   var size = {};
       size.margin = {top: 20, right: 50, bottom: 20, left: 50},
       size.width = frame.offsetWidth ,
       size.height = frame.clientHeight;
+  // 2. Set standart-selection
   var selection = {};
       selection.year = "1960";
       selection.series = "gdp_pc";
@@ -25,7 +32,7 @@ window.onload = function() {
 
 
 
-  // Load in data
+  // 3. Load in data
   queue()
     .defer(d3.json, "data/world.json")
     .defer(d3.json, "data/iso.json")
@@ -64,13 +71,15 @@ window.onload = function() {
     allData.push(battle_death);
     allData.push(life_exp);
 
-    // Aggregate data
+    // 4. Aggregate data GUIDE: go to data.js line 1
     var data = aggregateData(allData);
 
-    // Get statistics and z-scores for all entrys
+    // 5. Get statistics and z-scores for all entrys
     var stats = getStats(data);
-    // Draw visualizations
+
+    // 6. Draw visualizations GUIDE: go to worldmap.js line 38
     drawWorld(stats, countries, selection, size, data);
+    // 8. Draw Linegraph GUIDE: go to linegraph.js line 21
     drawLinegraph(data, stats, selection, size, countries);
     drawStackedBarchart(data, stats, selection, size, countries);
     // Append text
@@ -82,12 +91,7 @@ window.onload = function() {
     var formatYear = d3.timeFormat("%Y");
     for(year in data["004"].series["life_exp"].values) years.push(new Date(year));
 
-/*
-    var info = d3.select("#info");
-    info.append("p").html("<strong>Name: </strong> Phillip Kersten");
-    info.append("p").html("<strong>Studentnr: </strong> 10880682");
-    info.append("p").html('<strong>Source: </strong> <a target="_blank" href="http://databank.worldbank.org/data/reports.aspx?source=global-bilateral-migration">Worldbank</a>');
-*/
+
     // Set listener for selecting data on worldmap
     selectWorld.on('click', function() {
       selection.countries = [];

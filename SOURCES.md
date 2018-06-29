@@ -24,3 +24,6 @@ https://bl.ocks.org/alandunning/cfb7dcd7951826b9eacd54f0647f48d3
 
 List
 http://bl.ocks.org/ne8il/5131235  
+
+Curves
+/https://bl.ocks.org/d3noob/ced1b9b18bd8192d2c898884033b5529

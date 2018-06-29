@@ -1,10 +1,19 @@
+/*data.js
+  Phillip Kersten 10880682
+
+  Aggregate data:
+  - Save data to convinient object
+
+  getStats:
+  - Calculate mean, var and z-scores for each value, per country, series and world
+*/
 function aggregateData(allData) {
 
   var iso = allData[0];
   var countries = allData[1];
   var data = {};
 
-  //Prepare data by giving the appropriate numeric iso-codes
+  // 4.1. Prepare data by giving the appropriate numeric iso-codes
   allData.slice(2).forEach(function(dataset) {
     dataset.forEach(function(entry) {
       iso.forEach(function(i) {
@@ -13,10 +22,12 @@ function aggregateData(allData) {
     });
   });
 
-  // Iterate through all data and append the relevant information to datastructure
-  allData.slice(2).forEach(function(dataset) { //datas oder allData
+  // 4.2. Iterate through all data and append the relevant information to datastructure
+  // For each dataset...
+  allData.slice(2).forEach(function(dataset) {
     var series = (" " + dataset[0]["series_code"]).slice(1);
 
+    // For each country...
     countries.forEach(function(country) {
       if(!(country.id in data)) {
         data[country.id] = {};
@@ -24,14 +35,16 @@ function aggregateData(allData) {
       }
       data[country.id].series[series] = { "values" : {}};
 
+      // For each entry...
       dataset.forEach(function(entry) {
         if(entry.numCode == country.id) {
           data[country.id].series[series]["series"] = entry.series;
           data[country.id].name = entry.name;
 
+          // For each datapoint...
           for(var key in entry) {
             if(key[0] == "1" || key[0] =="2") {
-              // Save values in object
+              // 4.3. Save values in object, set ".." to "NaN"
               if(entry[key] == "..") data[country.id].series[series]["values"][key] = NaN;
               else data[country.id].series[series]["values"][key] = +entry[key].replace(",",".");
             }
@@ -40,7 +53,7 @@ function aggregateData(allData) {
       });
     });
   });
-  // Return aggregated data
+  // Return aggregated data GUIDE: go back to main line 76
   return data;
 }
 
@@ -225,10 +238,11 @@ function getStats(data) {
   return stats;
 }
 
-function update() {
-  log("HI","HI");
-}
+/* getLineData:
 
+  - Gets appropriate data for linegraph
+
+*/
 function getLineData(data, stats, selection) {
   var lineData = {};
   if(selection.countries == "world") {
@@ -268,7 +282,11 @@ function getLineData(data, stats, selection) {
   return lineData;
 }
 
+/*getBarData.js
 
+  - gets data for barchart given the selection
+  
+*/
 function getBarData(data, stats, selection) {
   var barData = [];
 
