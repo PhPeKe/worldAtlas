@@ -42,6 +42,7 @@ and on a averaged level(barchart).
   - When more than 4 countries are selected the country selected first is removed from the list
 
 ![Functional design](/doc/finalDesign.PNG)
+
 *Final version of the functional design*
 
 ### Challenges:
@@ -66,4 +67,3 @@ and on a averaged level(barchart).
   - Stacked bargraph instead of marimekko
       These two charts are almost the same with behalf on one extra dimension: the column width. It would have been possible to implement this given my data but i chose to use the stacked barchart because otherwise the visualisations could have gotten too complex.
   - Linegraph instead of scatterplot
-      
