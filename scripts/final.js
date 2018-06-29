@@ -12,8 +12,10 @@ window.onload = function() {
   var selection = {};
       selection.year = "1960";
       selection.series = "gdp_pc";
+      selection.lineSeries = ["gdp_pc","life_exp","mil_exp"];
       selection.countries = ["world"];
       selection.map = "cwar_intensity";
+      selection.linegraph = "series"
   var format = d3.format(",");
   var selectWorld = d3.select("svg g rect");
   var input = d3.selectAll("input.lineButton");
@@ -72,7 +74,7 @@ window.onload = function() {
 
     // Get statistics and z-scores for all entrys
     var stats = getStats(data);
-
+    console.log(stats);
     // Draw visualizations
     drawWorld(stats, countries, mapData, selection, size, data);
     drawLinegraph(data, stats, selection, size, countries, mapData);

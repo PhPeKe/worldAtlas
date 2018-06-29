@@ -50,7 +50,7 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
   var bisectDate = d3.bisector(function(d) { return d.year; }).left;
   // Get data for drawing linegraph
   var lineData = getLineData(data, stats, selection);
-
+  console.log(lineData);
   //Prepare x,y-scale and line
   var x = d3.scaleTime()
     .rangeRound([0, size.width]);
@@ -75,14 +75,25 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
     }
   }
 
+
   list.selectAll('li')
     .data(entries)
-    .enter()
+      .enter()
     .append('li')
-    .html(String)
-    .append("text")
-    .attr("class", "listText");
+    .append("a")
+      .attr("class", "listText")
+      .attr("target","_blank")
+      //Append link to wikipedia page of country
+      .attr("href", function(d) {
+        return "http://en.wikipedia.org/wiki/" + d;
+      })
+      .html(String)
+      .attr("class","linelabels");
+
+
     console.log(list);
+
+
   for(entry in lineData) {
     lineData[entry].forEach(function(d) {
       domainList.push(d);

@@ -1,13 +1,8 @@
 function aggregateData(allData) {
 
-
   var iso = allData[0];
   var countries = allData[1];
   var data = {};
-
-
-
-
 
   //Prepare data by giving the appropriate numeric iso-codes
   allData.slice(2).forEach(function(dataset) {
@@ -237,42 +232,60 @@ function update() {
 
 function getLineData(data, stats, selection) {
   var lineData = {};
-
-  // If nothing is selected the average of the whole world is given back
-  if(selection.countries == "world") {
-    lineData["world"] = [];
-    for(key in stats[selection.series].meanByYear) {
-      var object = {};
-      object.year = +key;
-      object.iso = "000";
-      if(isNaN(stats[selection.series].meanByYearZ[key])) object.value = undefined;
-      else object.value = stats[selection.series].meanByYear[key];
-      object.seriesName = data["004"].series[selection.series].series;
-      object.name = "world";
-      lineData["world"].push(object);
+  if(selection.linegraph == "countries") {
+    // If nothing is selected the average of the whole world is given back
+    if(selection.countries == "world") {
+      lineData["world"] = [];
+      for(key in stats[selection.series].meanByYear) {
+        var object = {};
+        object.year = +key;
+        object.iso = "000";
+        if(isNaN(stats[selection.series].meanByYearZ[key])) object.value = undefined;
+        else object.value = stats[selection.series].meanByYear[key];
+        object.seriesName = data["004"].series[selection.series].series;
+        object.name = "world";
+        lineData["world"].push(object);
+      }
+      return lineData;
     }
-    return lineData;
-  }
 
-  var lineData = {};
+    var lineData = {};
 
-  // If selection is made selected data is returned
-  selection.countries.forEach(function(selectedCountry) {
-    var otherObject = {};
-    otherObject[selectedCountry] = [];
-    for(year in data[selectedCountry].series[selection.series].zscores) {
-      var object = {};
-      object.year = +year;
-      object.iso = selectedCountry;
-      if(isNaN(data[selectedCountry].series[selection.series].zscores[year])) object.value = undefined;
-      else object.value = data[selectedCountry].series[selection.series].values[year];
-      object.seriesName = data[selectedCountry].series[selection.series].series;
-      object.name = data[selectedCountry].name;
-      otherObject[selectedCountry].push(object);
-    }
-    lineData[selectedCountry] = otherObject[selectedCountry];
+    // If selection is made selected data is returned
+    selection.countries.forEach(function(selectedCountry) {
+      var otherObject = {};
+      otherObject[selectedCountry] = [];
+      for(year in data[selectedCountry].series[selection.series].zscores) {
+        var object = {};
+        object.year = +year;
+        object.iso = selectedCountry;
+        if(isNaN(data[selectedCountry].series[selection.series].zscores[year])) object.value = undefined;
+        else object.value = data[selectedCountry].series[selection.series].values[year];
+        object.seriesName = data[selectedCountry].series[selection.series].series;
+        object.name = data[selectedCountry].name;
+        otherObject[selectedCountry].push(object);
+      }
+      lineData[selectedCountry] = otherObject[selectedCountry];
+    });
+  } else {
+
+    selection.lineSeries.forEach(function(series) {
+      var otherObject = {};
+      otherObject[series] = [];
+      for(year in stats[series].meanByYearZ) {
+        var object = {};
+        object.year = +year;
+        object.series = series;
+        if(isNaN(stats[series].meanByYearZ[year])) object.value = undefined;
+        else object.value = stats[series].meanByYearZ[year];
+        object.seriesName = data["004"].series[selection.series].series;
+        object.name = data["004"].series[selection.series].series;
+        otherObject[series].push(object);
+      }
+      lineData[series] = otherObject[series];
   });
   return lineData;
+}
 }
 
 

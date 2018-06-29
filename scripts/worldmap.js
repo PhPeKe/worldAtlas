@@ -106,6 +106,7 @@ function drawWorld(stats, countries, mapData, selection, size, data) {
           }
           if(selection.countries.length == 0) selection.countries = ["world"];
           if(selection.countries.length > 4) selection.countries = selection.countries.splice(1);
+          // Set size and update visualizations
           setCurrentSize(size);
           drawWorld(stats, countries, mapData, selection, size, data);
           drawLinegraph(data, stats, selection, size, countries, mapData);
