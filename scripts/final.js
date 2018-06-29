@@ -75,6 +75,8 @@ window.onload = function() {
     drawStackedBarchart(data, stats, selection, size, countries);
     // Append text
     appendText(size);
+    d3.select("div#valuesLine").style('visibility', 'visible');
+    d3.selectAll("h1").style('visibility', 'visible');
 
     var years = [];
     var formatYear = d3.timeFormat("%Y");

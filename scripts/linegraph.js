@@ -1,6 +1,5 @@
 /*linegraph.js
   Phillip Kersten
-  Crosshair adapted from: https://bl.ocks.org/alandunning/cfb7dcd7951826b9eacd54f0647f48d3
 */
 
 function makeLinegraph(size) {
@@ -18,28 +17,34 @@ function makeLinegraph(size) {
 
 function drawLinegraph(data, stats, selection, size, countries, mapData) {
 
+  // Reset and adjust size before drawing
   setCurrentSize(size);
   size.margin = {top: size.height / 50, right: size.width / 20, bottom: size.height / 20, left: size.width/20},
   size.width = ((size.width/ 100) * 45) - size.margin.left - size.margin.right,
-  size.height = ((size.height/100)* 45) - size.margin.bottom - size.margin.top;
-
-  d3.selectAll("div.d3-tip.line").remove();
-  d3.selectAll("div.d3-tip.line.n").remove();
+  size.height = ((size.height/100)* 40) - size.margin.bottom - size.margin.top;
 
   // Remove old elements before drawing
+  d3.selectAll("div.d3-tip.line").remove();
+  d3.selectAll("div.d3-tip.line.n").remove();
   d3.selectAll(".graph").remove();
   d3.selectAll(".path").remove();
   d3.selectAll(".axis").remove();
 
-  var linecolors = ["#1f78b4","#33a02c","#e31a1c","#ff7f00","#6a3d9a",
-                    "#a6cee3","#b2df8a","#fb9a99","#fdbf6f","#cab2d6"];
-
+  var linecolors = ["#1b9e77","#7570b3","#e6ab02"];
+  var lineText = {};
+  lineText.names = {"gdp_pc": "GDP per capita",
+                        "mil_exp" : "Military expenditure",
+                        "life_exp" : "Life expectancy"};
+  lineText.suffix = {"gdp_pc": " US$",
+                        "mil_exp" : " % of GDP",
+                        "life_exp" : " years"};
   let temp = makeLinegraph(size);
   var linegraph = temp[1];
   var svg = temp[0];
   var bisectDate = d3.bisector(function(d) { return d.year; }).left;
   // Get data for drawing linegraph
   var lineData = getLineData(data, stats, selection);
+
   //Prepare x,y-scale and line
   var x = d3.scaleTime()
     .rangeRound([0, size.width]);
@@ -53,7 +58,11 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
   domainList = [];
 
   d3.select(".lineList").remove();
-  var list = d3.select("body").append("ul").attr("class","lineList");
+  var list = d3.selectAll("div#list")
+                .style("width","0")
+              .append("ul")
+                .attr("class","lineList");
+
   var entries = [];
   for(country in selection.countries) {
     if(selection.countries[country] == "world") {
@@ -62,7 +71,6 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
       entries.push(data[selection.countries[country]].name);
     }
   }
-
 
   list.selectAll('li')
     .data(entries)
@@ -89,9 +97,8 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
   }
 
   //Set domains
-  x.domain(d3.extent(domainList, function(d) {return d.year}));
-  y.domain(d3.extent(domainList, function(d) {return d.value}));
-
+  x.domain(d3.extent(domainList, function(d) { return new Date(d.year); }));
+  y.domain(d3.extent(domainList, function(d) { return d.value; }));
   var first = true;
   var i = 0;
   var focus = [];
@@ -101,7 +108,6 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
     linegraph.append("path")
       .datum(b)
         .attr("class","linepath")
-        .call(d3.axisBottom(x).tickFormat(d3.timeFormat("%Y")))
         //.attr("id", i)
         .attr("fill", "none")
         .attr("id", function(d) { return d.iso;})
@@ -110,19 +116,7 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
         .attr("stroke-linejoin", "round")
         .attr("stroke-linecap", "round")
         .attr("stroke-width", 4)
-        .attr("d", line)
-        .on("click", function(d) {
-          lineTip.hide(d);
-          if(selection.countries == "world") {
-            return;
-          }
-          // Splice list
-          selection.countries.splice(selection.countries.indexOf(d[0].iso),1);
-          if(selection.countries.length == 0) selection.countries = ["world"];
-          setCurrentSize(size);
-          drawLinegraph(data, stats, selection, size, countries);
-          drawStackedBarchart(data, stats, selection, size, countries);
-        })
+        .attr("d", line);
 
         var thisFocus = linegraph.append("g")
         .attr("class", "focus")
@@ -167,15 +161,15 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
         d.style("display", "none"); })
       })
     .on("mousemove", mousemove);
-  console.log(lineData);
+
   function mousemove() {
     var list = [];
     var count = 0;
-    for(country in lineData) {
+    for(series in lineData) {
       var x0 = x.invert(d3.mouse(this)[0]),
-      i = bisectDate(lineData[country], x0, 1),
-      d0 = lineData[country][i - 1],
-      d1 = lineData[country][i],
+      i = bisectDate(lineData[series], x0, 1),
+      d0 = lineData[series][i - 1],
+      d1 = lineData[series][i],
       d = x0 - d0.year > d1.year - x0 ? d1 : d0;
       if(!(isNaN(y(d.value)))) {
         focus[count].style("display",null);
@@ -185,6 +179,18 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
       } else {
         focus[count].style("display","none");
       }
+      d3.select("li#"+series).html(function(){
+        if(selection.countries == "world") return lineText.names[series]
+                                          + " in World (" + d.year + "): "
+                                          + Math.round(stats[series].meanByYear[d.year]*100)/100
+                                          + lineText.suffix[series];
+        else return lineText.names[series]
+                  + " in "
+                  + data[selection.countries[selection.countries.length-1]].name
+                  + " (" + d.year + "): "
+                  + Math.round(data[selection.countries[selection.countries.length-1]].series[series].values[d.year]*100)/100
+                  + lineText.suffix[series];
+      });
       selection.year = d.year;
       d3.select("#yearDisplay").html("Year: " + d.year);
       drawWorld(stats, countries, selection, size, data)
