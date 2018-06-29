@@ -4,7 +4,7 @@
 
   Follow the GUIDE for a step-by-step walk through the code:
     Use the list at the end of report.md for an overview
-    
+
 */
 window.onload = function() {
 
@@ -95,7 +95,7 @@ window.onload = function() {
     d3.select("div#valuesLine").style('visibility', 'visible');
     d3.selectAll("h1").style('visibility', 'visible');
 
-    // Set listener for selecting data on worldmap
+    // 10. Set listener for selecting data on worldmap
     selectWorld.on('click', function() {
       selection.countries = [];
       selection.countries = ["world"];
@@ -104,12 +104,8 @@ window.onload = function() {
       drawStackedBarchart(data, stats, selection, size, countries);
     });
 
-    // Remove info-page when clicked
-    d3.selectAll("#x").on("click", function() {
-      d3.selectAll("div#overlay").remove();
-    });
 
-    // Redraw visualizations in appropriate size when window is resized
+    // 11. Redraw visualizations in appropriate size when window is resized
     window.onresize = function() {
       size.width = frame.clientWidth;
       size.height = frame.clientHeight;

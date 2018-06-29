@@ -140,3 +140,6 @@ I chose for the linegraph instead of the scatterplot because it makes the design
   3. Prepare barchart, get data
   4. Set domain
   5. legend
+  6. Draw new selection
+10. Set listeners
+11. Resize listener

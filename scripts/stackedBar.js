@@ -162,7 +162,9 @@ function drawStackedBarchart(data, stats, selection, size, countries) {
       .on("mouseover", function(d) { barLabelTip.show(d); })
       .on("mouseout", function(d) { barLabelTip.hide(d); });
 
+  // Call tooltip
   legend.call(barLabelTip);
+
   // Remove overlay when loading is done
   d3.selectAll("div#overlay").remove();
   var rect = d3.selectAll("#barchart svg g g rect");
@@ -177,7 +179,7 @@ function drawStackedBarchart(data, stats, selection, size, countries) {
       .style("opacity", 1)
       .attr("selected", "true");
 
-    // Set size and redraw with current selection
+    // 9.6. Set size and redraw with current selection GUIDE: go back to main.js line 98
     setCurrentSize(size);
     drawWorld(stats, countries, selection, size, data);
     drawLinegraph(data, stats, selection, size, countries);
