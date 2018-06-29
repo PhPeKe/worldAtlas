@@ -49,7 +49,7 @@ function getDomain(data, selection) {
   // Workaround for the domainlist
   var domainList = [];
   for(key in data) {
-    if (isNaN(data[key].series[selection.map].values[selection.year]) == false)domainList.push(data[key].series[selection.map].values[selection.year]);
+    if (isNaN(data[key].series[selection.series].values[selection.year]) == false)domainList.push(data[key].series[selection.series].values[selection.year]);
   };
 
   var domain = d3.extent(domainList, function(d){return d; });//return d[selection.series][selection.year]});
@@ -222,7 +222,6 @@ function getStats(data) {
     }
     stats[series].meanZ = total/n;
   }
-console.log(stats);
   return stats;
 }
 
@@ -232,43 +231,7 @@ function update() {
 
 function getLineData(data, stats, selection) {
   var lineData = {};
-  if(selection.linegraph == "countries") {
-    // If nothing is selected the average of the whole world is given back
-    if(selection.countries == "world") {
-      lineData["world"] = [];
-      for(key in stats[selection.series].meanByYear) {
-        var object = {};
-        object.year = +key;
-        object.iso = "000";
-        if(isNaN(stats[selection.series].meanByYearZ[key])) object.value = undefined;
-        else object.value = stats[selection.series].meanByYear[key];
-        object.seriesName = data["004"].series[selection.series].series;
-        object.name = "world";
-        lineData["world"].push(object);
-      }
-      return lineData;
-    }
-
-    var lineData = {};
-
-    // If selection is made selected data is returned
-    selection.countries.forEach(function(selectedCountry) {
-      var otherObject = {};
-      otherObject[selectedCountry] = [];
-      for(year in data[selectedCountry].series[selection.series].zscores) {
-        var object = {};
-        object.year = +year;
-        object.iso = selectedCountry;
-        if(isNaN(data[selectedCountry].series[selection.series].zscores[year])) object.value = undefined;
-        else object.value = data[selectedCountry].series[selection.series].values[year];
-        object.seriesName = data[selectedCountry].series[selection.series].series;
-        object.name = data[selectedCountry].name;
-        otherObject[selectedCountry].push(object);
-      }
-      lineData[selectedCountry] = otherObject[selectedCountry];
-    });
-  } else {
-
+  if(selection.countries == "world") {
     selection.lineSeries.forEach(function(series) {
       var otherObject = {};
       otherObject[series] = [];
@@ -283,9 +246,26 @@ function getLineData(data, stats, selection) {
         otherObject[series].push(object);
       }
       lineData[series] = otherObject[series];
+    });
+  return lineData;
+  }
+  console.log(data);
+  selection.lineSeries.forEach(function(series) {
+    var otherObject = {};
+    otherObject[series] = [];
+    for(year in data[selection.countries[selection.countries.length - 1]].series[series].zscores) {
+      var object = {};
+      object.year = +year;
+      object.series = series;
+      if(isNaN(data[selection.countries[selection.countries.length - 1]].series[series].zscores[year])) object.value = undefined;
+      else object.value = data[selection.countries[selection.countries.length - 1]].series[series].zscores[year];
+      object.seriesName = data["004"].series[selection.series].series;
+      object.name = data["004"].series[selection.series].series;
+      otherObject[series].push(object);
+    }
+    lineData[series] = otherObject[series];
   });
   return lineData;
-}
 }
 
 

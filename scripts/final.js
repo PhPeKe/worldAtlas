@@ -55,31 +55,26 @@ window.onload = function() {
     var allData = [];
     allData.push(iso);
     allData.push(countries);
-    allData.push(life_exp);
     allData.push(arms_pers);
     allData.push(arms_exp);
     allData.push(arms_imp);
     allData.push(mil_exp);
     allData.push(gdp_pc);
-
-    var otherData = [];
-    otherData.push(iso);
-    otherData.push(countries);
-    otherData.push(cwar_intensity);
-    otherData.push(battle_death);
+    allData.push(cwar_intensity);
+    allData.push(battle_death);
+    allData.push(life_exp);
 
     // Aggregate data
     var data = aggregateData(allData);
-    mapData = aggregateData(otherData);
 
     // Get statistics and z-scores for all entrys
     var stats = getStats(data);
-    console.log(stats);
     // Draw visualizations
-    drawWorld(stats, countries, mapData, selection, size, data);
-    drawLinegraph(data, stats, selection, size, countries, mapData);
+    drawWorld(stats, countries, selection, size, data);
+    drawLinegraph(data, stats, selection, size, countries);
     drawStackedBarchart(data, stats, selection, size, countries);
-
+    // Append text
+    appendText(size);
 
     var years = [];
     var formatYear = d3.timeFormat("%Y");
@@ -96,27 +91,12 @@ window.onload = function() {
       selection.countries = [];
       selection.countries = ["world"];
       setCurrentSize(size);
-      drawLinegraph(data, stats, selection, size, countries, mapData);
+      drawLinegraph(data, stats, selection, size, countries);
       drawStackedBarchart(data, stats, selection, size, countries);
     });
 
-    appendText(size);
-    d3.selectAll("span.slider.round").style("visibility", "visible");
-    // Toggle input mode for linegraph
-    var btn = d3.select("span.slider.round")
-                .append("text")
-                .attr("id","mapButton")
-                .style("left","200");
-    btn.text("Test");
-    inputMode.on("click", function() {
-      if(selection.map == "cwar_intensity") {
-        selection.map = "battle_deaths";
-        d3.selectAll(".lineButton").attr("type","checkbox");
-      } else {
-        selection.map = "cwar_intensity";
-      }
-      drawWorld(stats, countries, mapData, selection, size, data);
-    });
+
+
 
     // Remove info-page when clicked
     d3.selectAll("#x").on("click", function() {
@@ -127,8 +107,8 @@ window.onload = function() {
     window.onresize = function() {
       size.width = frame.clientWidth;
       size.height = frame.clientHeight;
-      drawWorld(stats, countries, mapData, selection, size, data);
-      drawLinegraph(data, stats, selection, size, countries, mapData);
+      drawWorld(stats, countries, selection, size, data);
+      drawLinegraph(data, stats, selection, size, countries);
       drawStackedBarchart(data, stats, selection, size, countries);
       d3.selectAll(".overlay").style("width", frame.offsetWidth + 10).style("height", frame.clientHeight + 10);
       d3.selectAll("#overlay").selectAll("rect").attr("width", frame.offsetWidth + 10).attr("height", frame.clientHeight + 10);

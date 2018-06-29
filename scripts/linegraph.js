@@ -25,16 +25,6 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
 
   d3.selectAll("div.d3-tip.line").remove();
   d3.selectAll("div.d3-tip.line.n").remove();
-  var lineTip = d3.tip()
-                .attr('class', 'd3-tip line')
-                .offset([0, 0])
-                .html(function(d){
-                  return d[0].seriesName
-                        +"<br>"
-                        +"in: "
-                        +d[0].name;
-                      });
-
 
   // Remove old elements before drawing
   d3.selectAll(".graph").remove();
@@ -50,7 +40,6 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
   var bisectDate = d3.bisector(function(d) { return d.year; }).left;
   // Get data for drawing linegraph
   var lineData = getLineData(data, stats, selection);
-  console.log(lineData);
   //Prepare x,y-scale and line
   var x = d3.scaleTime()
     .rangeRound([0, size.width]);
@@ -65,7 +54,6 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
 
   d3.select(".lineList").remove();
   var list = d3.select("body").append("ul").attr("class","lineList");
-  console.log(selection.countries);
   var entries = [];
   for(country in selection.countries) {
     if(selection.countries[country] == "world") {
@@ -107,7 +95,7 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
   var first = true;
   var i = 0;
   var focus = [];
-
+console.log(lineData);
   for(entry in lineData) {
     var b = lineData[entry];
     //Append path i times
@@ -133,35 +121,10 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
           selection.countries.splice(selection.countries.indexOf(d[0].iso),1);
           if(selection.countries.length == 0) selection.countries = ["world"];
           setCurrentSize(size);
-          drawLinegraph(data, stats, selection, size, countries, mapData);
+          drawLinegraph(data, stats, selection, size, countries);
           drawStackedBarchart(data, stats, selection, size, countries);
         })
-        .on("mouseover", function(d) {
-          let xPos = d3.mouse(this)[0];
-          let yPos = d3.mouse(this)[1];
-// ToDo: Tooltip just works with one line
-          xPos = xPos - 480;
-          lineTip.offset([yPos - 15, xPos]);
-          lineTip.show(d);
-        })
-        .on("mouseout",  function(d) {
-          lineTip.hide(d);
-        })
-        .on("mousemove", function(d) {
-        });
-        linegraph.append("text")
-          .attr("class","linegraph")
-          .attr("id", "linegraph" + String(i))
-          .attr("y", function(b) { return 0; })
-          .attr("x", x(b[b.length - 1].year)+5)
-          .attr("text-anchor", "start")
-          .attr("dy", ".7em").append("a")
-          .style("fill", linecolors[i])
-          .attr("target","_blank")
-          //Append link to wikipedia page of country
-          .attr("href", "http://en.wikipedia.org/wiki/"+b.name)
-          .html(b.name)
-          .attr("class","linelabels");
+
 
         var thisFocus = linegraph.append("g")
         .attr("class", "focus")
@@ -176,7 +139,6 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
           .attr("dy", ".31em");
 
         focus.push(thisFocus);
-        linegraph.call(lineTip);
 //!!!!!!!!!!!!!!!! Compare worldwide on linechart and countrywise with stacked barchart
     first = false;
     i+=1;
@@ -220,14 +182,14 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
       if(!(isNaN(y(d.value)))) {
         focus[count].style("display",null);
         focus[count].attr("transform", "translate(" + x(d.year) + "," + y(d.value) + ")");
-        focus[count].select("text").text(function() { return d.name + ": " + Math.round(d.value*100)/100; });
+        focus[count].select("text").text(function() { return d.series;});
         focus[count].select("text").style("color", function(count) { return linecolors[count]; });
       } else {
         focus[count].style("display","none");
       }
       selection.year = d.year;
       d3.select("#yearDisplay").html("Year: " + d.year);
-      drawWorld(stats, countries, mapData, selection, size, data)
+      drawWorld(stats, countries, selection, size, data)
       count += 1;
     }
   }

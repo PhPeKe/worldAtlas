@@ -11,9 +11,9 @@ function makeTooltip(selection, data) {
                      + "Name: "
                      + data[d.id].name
                      + "<br>"
-                     + data[d.id].series[selection.map].series
+                     + data[d.id].series[selection.series].series
                      + ": <br>"
-                     + Math.round(data[d.id].series[selection.map].values[selection.year]*100)/100;
+                     + Math.round(data[d.id].series[selection.series].values[selection.year]*100)/100;
                                      });
   return tip;
 }

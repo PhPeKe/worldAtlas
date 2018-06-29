@@ -156,8 +156,10 @@ function drawStackedBarchart(data, stats, selection, size, countries) {
       .style("opacity", 1)
       .attr("selected", "true");
 
+
     setCurrentSize(size);
-    drawLinegraph(data, stats, selection, size, countries, mapData);
+    drawWorld(stats, countries, selection, size, data);
+    drawLinegraph(data, stats, selection, size, countries);
     drawStackedBarchart(data, stats, selection, size, countries);
   });
 }

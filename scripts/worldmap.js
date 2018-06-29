@@ -29,11 +29,10 @@ function prepareWorld(size, tip) {
 }
 
 
-function drawWorld(stats, countries, mapData, selection, size, data) {
+function drawWorld(stats, countries, selection, size, data) {
 
   d3.selectAll("div.map svg").remove();
-  var mapSelection = "battle_death";
-  var domain = getDomain(mapData, selection);
+  var domain = getDomain(data, selection);
   // Set function that is returning color appropriate to value
   var color = d3.scaleLinear()
     .domain(domain)
@@ -44,7 +43,7 @@ function drawWorld(stats, countries, mapData, selection, size, data) {
   size.width = ((size.width / 100) * 50) - size.margin.left - size.margin.right,
   size.height = ((size.height / 100) * 40) - size.margin.bottom - size.margin.top;
 
-  var tip = makeTooltip(selection, mapData);
+  var tip = makeTooltip(selection, data);
   var world = prepareWorld(size, tip);
   var map = world[0];
   var path = world[1];
@@ -60,7 +59,7 @@ function drawWorld(stats, countries, mapData, selection, size, data) {
       .attr("class","country")
       .attr("id", function(d) { return d.id; })
       .style("fill", function(d) {
-        return color(mapData[d.id].series[selection.map].values[selection.year]);
+        return color(data[d.id].series[selection.series].values[selection.year]);
       })
       .style('stroke', 'white')
       .style('stroke-width', 0.3)
@@ -108,8 +107,8 @@ function drawWorld(stats, countries, mapData, selection, size, data) {
           if(selection.countries.length > 4) selection.countries = selection.countries.splice(1);
           // Set size and update visualizations
           setCurrentSize(size);
-          drawWorld(stats, countries, mapData, selection, size, data);
-          drawLinegraph(data, stats, selection, size, countries, mapData);
+          drawWorld(stats, countries, selection, size, data);
+          drawLinegraph(data, stats, selection, size, countries);
           drawStackedBarchart(data, stats, selection, size, countries);
         }
         });
