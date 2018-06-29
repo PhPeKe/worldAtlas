@@ -1,13 +1,17 @@
-function makeStackedBarchart(size) {
+/*stackedBar.js
 
+  Phillip Kersten 10880682
+  Prepare and draw stacked barchart
+*/
+function makeStackedBarchart(size) {
+  // Append svg
   d3.selectAll(".barchart").remove();
   var svg = d3.select("#barchart")
     .append("svg")
       .attr("class","barchart")
       .attr("width", size.width + size.margin.left + size.margin.right)
       .attr("height", size.height + size.margin.bottom + size.margin.top);
-    //.append("g");
-      //.attr("transform", "translate(" + size.margin.left + "," + size.margin.top + ")");
+
   return svg;
 }
 

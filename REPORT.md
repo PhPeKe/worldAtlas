@@ -50,32 +50,7 @@ and on a averaged level(barchart).
 
 *Final version of the functional design*
 
-### Flow:
 
-1. Declare all veriables in main
-2. Set standard selection
-3. Load in Data
-4. Aggregate data
-  1. Prepare data
-  2. Append data to structure
-  3. Code NaN
-5. Calculate statistics
-6. Draw visualizations for the first time
-7. Draw World
-  1. remove old world
-  2. set size
-  3. Append g to svg
-  4. Fill map with color
-  5. set listeners
-  6. Adjust selection
-8. Draw linegraph
-  1. Set size
-  2. Remove old elements
-  3. declare variables
-  4. Get data
-  5. Prepare scale, line
-  6. Create list with links to wikipedia page of selected countries
-  7. Draw lines
 ### Challenges:
 
 - *Data*
@@ -96,7 +71,6 @@ and on a averaged level(barchart).
   - Civil war intensity
     - Estimate of intensity of civil war from SIPRI
 
-
 - *Charts*
   - Stacked bargraph instead of marimekko
 
@@ -108,10 +82,10 @@ and on a averaged level(barchart).
 
 
 - *Statistics*
-  - Calculate mean per series, year and country
+  - Calculate **mean** per series, year and country
     - Per series and per country for barchart
 
-  - Calculate z-scores
+  - Calculate **z-scores**
     - (Value-population mean)/variance
     - Transposes all variables to one scale
     - Linegraph
@@ -119,3 +93,44 @@ and on a averaged level(barchart).
 
 ### Defence
 I chose for the linegraph instead of the scatterplot because it makes the design more consistent and because it offers a convinient and intuitive way to change the year on the worldmap. Also this way i can make use of the z-scores which give, in combination with the linegraph, a great overview of the relative development of a country compared to the world. I chose to use my visualizations as input because it looks a lot nicer than a lot of buttons on the page. This way i can make optimal use of the space i have. Overall im happy with design and functionality, although if i had more time i would really like to implement a second page with the scatterplot to correlate variables and countries as well as a t-test to test if differences between countries are significant. The implementation of a t-test should be simple because the z-scores are already there and it just has to be calculated if one datapoint is more than one and a half standard-deviations above the other. With the z-scores also different measures could be averaged so one could test if two countries differ in a combination of two variables.
+
+## Flow:
+
+*Follow this guide while going through the code numbers of the list below are also represented in the code*
+
+*While going through the code follow the GUIDE comments*
+
+1. Declare all veriables in main
+2. Set standard selection
+3. Load in Data
+4. Aggregate data
+  1. Prepare data
+  2. Append data to structure
+  3. Code NaN
+5. Calculate statistics
+  1. Initialize statistics+
+  2. Total per country per series
+  3. Mean per country per series
+  4. Mean per series
+  5. var, sd per country per series
+  6. var, sd per series
+  7. mean per series per year
+  8. var per series per year
+  9. z-scores
+6. Draw visualizations for the first time
+7. Draw World
+  1. remove old world
+  2. set size
+  3. Append g to svg
+  4. Fill map with color
+  5. set listeners
+  6. Adjust selection
+8. Draw linegraph
+  1. Set size
+  2. Remove old elements
+  3. declare variables
+  4. Get data
+  5. Prepare scale, line
+  6. Create list with links to wikipedia page of selected countries
+  7. Draw lines
+9. Draw Barchart

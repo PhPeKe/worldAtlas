@@ -29,6 +29,8 @@ window.onload = function() {
   var inputMode = d3.selectAll("input.mode");
   var parseTime = d3.timeParse("%Y");
   var tip = makeTooltip(selection);
+  var years = [];
+  var formatYear = d3.timeFormat("%Y");
 
 
 
@@ -74,23 +76,19 @@ window.onload = function() {
     // 4. Aggregate data GUIDE: go to data.js line 1
     var data = aggregateData(allData);
 
-    // 5. Get statistics and z-scores for all entrys
+    // 5. Get statistics and z-scores for all entrys GUIDE: go to data.js line
     var stats = getStats(data);
 
     // 6. Draw visualizations GUIDE: go to worldmap.js line 38
     drawWorld(stats, countries, selection, size, data);
     // 8. Draw Linegraph GUIDE: go to linegraph.js line 21
     drawLinegraph(data, stats, selection, size, countries);
+    // 9. DrawBarchart
     drawStackedBarchart(data, stats, selection, size, countries);
-    // Append text
+    // Append text when everything is ready
     appendText(size);
     d3.select("div#valuesLine").style('visibility', 'visible');
     d3.selectAll("h1").style('visibility', 'visible');
-
-    var years = [];
-    var formatYear = d3.timeFormat("%Y");
-    for(year in data["004"].series["life_exp"].values) years.push(new Date(year));
-
 
     // Set listener for selecting data on worldmap
     selectWorld.on('click', function() {
@@ -100,9 +98,6 @@ window.onload = function() {
       drawLinegraph(data, stats, selection, size, countries);
       drawStackedBarchart(data, stats, selection, size, countries);
     });
-
-
-
 
     // Remove info-page when clicked
     d3.selectAll("#x").on("click", function() {

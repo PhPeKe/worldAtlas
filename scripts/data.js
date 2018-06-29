@@ -57,6 +57,11 @@ function aggregateData(allData) {
   return data;
 }
 
+/* getDomain:
+
+  - Get domain for multiple data series
+
+*/
 
 function getDomain(data, selection) {
   // Workaround for the domainlist
@@ -69,18 +74,27 @@ function getDomain(data, selection) {
   return domain;
 }
 
+/* getStats:
+
+  - Calculate stats for all data:
+    - mean
+    - var, sd
+    - z-scores
+
+*/
+
 function getStats(data) {
+
+  // 5.1. Initialize stats object and counter and all statistics
   var stats = {};
   var n = 0;
-
   for(series in data["004"].series) {
-    // Initialize all statistics
     stats[series] = {};
     stats[series].mean = 0;
     stats[series].sd = 0;
     stats[series].total = 0;
     stats[series].n = 0;
-    stats[series].min = Infinity;
+    stats[series].min = Infinity; // Set min to infinity for "<" check later
     stats[series].max = 0;
     stats[series].var = 0;
     stats[series].sd = 0;
@@ -89,11 +103,11 @@ function getStats(data) {
   }
 
 
-  // Get total per series
+  // 5.2. Get total and mean per series
   for(country in data) {
     for(series in data[country].series) {
 
-      // Also get mean per country
+      // Total and n for mean
       data[country].series[series].total = 0;
       data[country].series[series].n = 0;
 
@@ -116,12 +130,12 @@ function getStats(data) {
         }
       }
 
-      // Get mean per country per series
+      // 5.3. Get mean per country per series
       data[country].series[series].mean = data[country].series[series].total/data[country].series[series].n;
     }
   }
 
-  // Calculate mean per series
+  // 5.4. Calculate mean per series
   for(series in data["004"].series) {
     stats[series].mean = stats[series].total / stats[series].n;
 
@@ -144,19 +158,19 @@ function getStats(data) {
           stats[series].n += 1;
         }
       }
-      // Calculate variance and standart deviation per country per series
+      // 5.5. Calculate variance and standart deviation per country per series
       data[country].series[series].var /= n;
       data[country].series[series].sd = Math.sqrt(data[country].series[series].var);
     }
   }
 
-  // Calculate var and SD per series
+  // 5.6. Calculate var and SD per series
   for(series in data["004"].series) {
     stats[series].var /= stats[series].n;
     stats[series].sd = Math.sqrt(stats[series].var);
   }
 
-  // Get total per series per year
+  // Get mean per series per year
   n = {};
   for(country in data) {
     for(series in data[country].series) {
@@ -176,7 +190,7 @@ function getStats(data) {
     }
   }
 
-  // Get mean per series per year
+  // 5.7. Get mean per series per year
   for(series in stats) {
     for(year in stats[series].meanByYear) {
       stats[series].meanByYear[year] /= n[series][year];
@@ -199,7 +213,7 @@ function getStats(data) {
     }
   }
 
-  // Get variance per series per year
+  // 5.8. Get variance per series per year
   for(series in stats) {
     for(year in stats[series].varByYear) {
       stats[series].varByYear[year] /= n[series][year];
@@ -207,7 +221,7 @@ function getStats(data) {
   }
 
 
-  // Get z-scores per country per series (z = (x – mean) / var)
+  // 5.9. Get z-scores per country per series (z = (x – mean) / var)
   // Get z-scores per series (z = (x – μ) / σ)
   for(country in data) {
     for(series in data[country].series) {
@@ -235,6 +249,8 @@ function getStats(data) {
     }
     stats[series].meanZ = total/n;
   }
+
+  // return stats GUIDE: go to main.js line 83
   return stats;
 }
 
@@ -263,7 +279,6 @@ function getLineData(data, stats, selection) {
     });
   return lineData;
   }
-  console.log(data);
   selection.lineSeries.forEach(function(series) {
     var otherObject = {};
     otherObject[series] = [];
@@ -285,7 +300,7 @@ function getLineData(data, stats, selection) {
 /*getBarData.js
 
   - gets data for barchart given the selection
-  
+
 */
 function getBarData(data, stats, selection) {
   var barData = [];

@@ -27,3 +27,4 @@ http://bl.ocks.org/ne8il/5131235
 
 Curves
 /https://bl.ocks.org/d3noob/ced1b9b18bd8192d2c898884033b5529
+https://stackoverflow.com/questions/38472250/d3-monotone-interpolation-smoothing-a-line
