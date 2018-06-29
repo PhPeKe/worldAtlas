@@ -79,13 +79,13 @@ function drawStackedBarchart(data, stats, selection, size, countries) {
         // Handle NaN
         if(!(isNaN(y(d[1])))) return y(d[1]);
         else {
-          return y(1);
+          return 0;
         }
       })
       .attr("height", function(d) {
         // Handle NaN
         if(!(isNaN(y(d[1])))) return y(d[0]) - y(d[1]);
-        else return 0.1;
+        else return 0;
       })
       .attr("width", x.bandwidth())
       .style("opacity", function(d) {

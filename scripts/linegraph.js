@@ -19,7 +19,7 @@ function makeLinegraph(size) {
 function drawLinegraph(data, stats, selection, size, countries, mapData) {
 
   setCurrentSize(size);
-  size.margin = {top: size.height / 20, right: size.width / 20, bottom: size.height / 20, left: size.width/20},
+  size.margin = {top: size.height / 50, right: size.width / 20, bottom: size.height / 20, left: size.width/20},
   size.width = ((size.width/ 100) * 45) - size.margin.left - size.margin.right,
   size.height = ((size.height/100)* 45) - size.margin.bottom - size.margin.top;
 
@@ -95,7 +95,6 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
   var first = true;
   var i = 0;
   var focus = [];
-console.log(lineData);
   for(entry in lineData) {
     var b = lineData[entry];
     //Append path i times
@@ -124,7 +123,6 @@ console.log(lineData);
           drawLinegraph(data, stats, selection, size, countries);
           drawStackedBarchart(data, stats, selection, size, countries);
         })
-
 
         var thisFocus = linegraph.append("g")
         .attr("class", "focus")

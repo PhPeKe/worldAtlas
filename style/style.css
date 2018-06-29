@@ -9,16 +9,21 @@
   float:center;
 }
 
+h1#countryDisplay {
+  position: relative;
+  left: 5%;
+}
+
 div#text {
   position: absolute;
   float : left;
   bottom: 2%;
-  left: 5%;
+  left: 2%;
   z-index : -1;
   text-align: left;
-  width: 40%;
-  height: 40%;
-  font: 20px garamond;
+  width: 50%;
+  height: 50%;
+  font: 18px garamond;
 }
 
 div#text p text {
@@ -110,15 +115,20 @@ div.info, div.controls{
 }
 
 h1#yearDisplay {
-  position: relative;
+  position: absolute;
+  width: 20%;
   left: 5%;
 }
 
+div.map {
+  margin-right: 0;
+  width: 200px;
+}
+
 svg.map {
+  position: absolute;
   float : left;
-  bottom: 25%;
   top: 5%;
-  left: 5%;
   z-index : -1;
 }
 
