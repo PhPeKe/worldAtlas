@@ -21,20 +21,20 @@ function drawStackedBarchart(data, stats, selection, size, countries) {
 
   d3.selectAll(".d3-tip.bartext").remove();
   d3.selectAll(".d3-tip.bartext.n").remove();
+
   var barLabelTip = d3.tip()
               .attr('class', 'd3-tip barText')
               .offset([-10, 0])
               .html(function(d) {
                 if(d in data["004"].series) return data["004"].series[d].series;
-                else return d;
+                else return "d";
               });
 
   var barchart = makeStackedBarchart(size);
   var barData = getBarData(data, stats, selection);
-  var g = barchart.append("g").attr("transform", "translate(" + size.margin.left + "," + size.margin.top + ")");
+  var g = barchart.append("g").attr("class", "barchart").attr("transform", "translate(" + size.margin.left + "," + size.margin.top + ")");
 
   var series = []
-
   for(seriesName in stats) {
     series.push(seriesName);
   }
@@ -50,7 +50,7 @@ function drawStackedBarchart(data, stats, selection, size, countries) {
 
   var z = d3.scaleOrdinal()
       .range(["#1f78b4","#33a02c","#e31a1c","#ff7f00","#6a3d9a",
-                        "#a6cee3","#b2df8a","#fb9a99","#fdbf6f","#cab2d6"]);
+              "#a6cee3","#b2df8a","#fb9a99","#fdbf6f","#cab2d6"]);
 
   var stack = d3.stack()
       .offset(d3.stackOffsetExpand);
@@ -76,13 +76,17 @@ function drawStackedBarchart(data, stats, selection, size, countries) {
       .attr("id", function(d) { return d.data.series; })
       .attr("x", function(d) { return x(d.data.series); })
       .attr("y", function(d) {
+        // Handle NaN
         if(!(isNaN(y(d[1])))) return y(d[1]);
         else {
-          
-          return y(0.1);
+          return y(1);
         }
       })
-      .attr("height", function(d) { return y(d[0]) - y(d[1]); })
+      .attr("height", function(d) {
+        // Handle NaN
+        if(!(isNaN(y(d[1])))) return y(d[0]) - y(d[1]);
+        else return 0.1;
+      })
       .attr("width", x.bandwidth())
       .style("opacity", function(d) {
         if(d.data.series == selection.series) return 1;
@@ -133,11 +137,12 @@ function drawStackedBarchart(data, stats, selection, size, countries) {
 
   d3.selectAll("#barchart svg g g g text")
       .on("mouseover", function(d) { barLabelTip.show(d); })
-      .on("mouseout", function(d) {barLabelTip.hide(d); });
+      .on("mouseout", function(d) { barLabelTip.hide(d); });
 
   setCurrentSize(size);
   legend.call(barLabelTip);
-
+  // Remove overlay when loading is done
+  d3.selectAll("div#overlay").remove();
   var rect = d3.selectAll("#barchart svg g g rect");
   rect.on("click", function(d) {
     console.log(d3.select(this).attr("id"));
@@ -152,8 +157,7 @@ function drawStackedBarchart(data, stats, selection, size, countries) {
       .attr("selected", "true");
 
     setCurrentSize(size);
-    drawWorld(stats, countries, data, selection, size);
-    drawLinegraph(data, stats, selection, size, countries);
+    drawLinegraph(data, stats, selection, size, countries, mapData);
     drawStackedBarchart(data, stats, selection, size, countries);
   });
 }

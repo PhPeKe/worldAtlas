@@ -16,7 +16,7 @@ function makeLinegraph(size) {
 }
 
 
-function drawLinegraph(data, stats, selection, size, countries) {
+function drawLinegraph(data, stats, selection, size, countries, mapData) {
 
   setCurrentSize(size);
   size.margin = {top: size.height / 20, right: size.width / 20, bottom: size.height / 20, left: size.width/20},
@@ -56,12 +56,33 @@ function drawLinegraph(data, stats, selection, size, countries) {
     .rangeRound([0, size.width]);
   var y = d3.scaleLinear()
     .rangeRound([size.height , 0]);
-  var line = d3.line()
+  var line = d3.line().curve(d3.curveLinear) //https://bl.ocks.org/d3noob/ced1b9b18bd8192d2c898884033b5529
     .defined(function(d) { return d.value; })
     .x(function(d) { return x(d.year);})
     .y(function(d) { return y(d.value);});
 
   domainList = [];
+
+  d3.select(".lineList").remove();
+  var list = d3.select("body").append("ul").attr("class","lineList");
+  console.log(selection.countries);
+  var entries = [];
+  for(country in selection.countries) {
+    if(selection.countries[country] == "world") {
+      entries.push("world");
+    } else {
+      entries.push(data[selection.countries[country]].name);
+    }
+  }
+
+  list.selectAll('li')
+    .data(entries)
+    .enter()
+    .append('li')
+    .html(String)
+    .append("text")
+    .attr("class", "listText");
+    console.log(list);
   for(entry in lineData) {
     lineData[entry].forEach(function(d) {
       domainList.push(d);
@@ -100,17 +121,14 @@ function drawLinegraph(data, stats, selection, size, countries) {
           // Splice list
           selection.countries.splice(selection.countries.indexOf(d[0].iso),1);
           if(selection.countries.length == 0) selection.countries = ["world"];
-          console.log("Size before",size);
           setCurrentSize(size);
-          console.log("Size after", size);
-          drawLinegraph(data, stats, selection, size, countries);
+          drawLinegraph(data, stats, selection, size, countries, mapData);
           drawStackedBarchart(data, stats, selection, size, countries);
         })
         .on("mouseover", function(d) {
           let xPos = d3.mouse(this)[0];
           let yPos = d3.mouse(this)[1];
 // ToDo: Tooltip just works with one line
-          console.log("X:",xPos,"Y:",yPos);
           xPos = xPos - 480;
           lineTip.offset([yPos - 15, xPos]);
           lineTip.show(d);
@@ -119,11 +137,20 @@ function drawLinegraph(data, stats, selection, size, countries) {
           lineTip.hide(d);
         })
         .on("mousemove", function(d) {
-        })
-        .on("dblclick", function(d) {
-          console.log("One Click");
-          //ToDo: Add country to marimekko chart
         });
+        linegraph.append("text")
+          .attr("class","linegraph")
+          .attr("id", "linegraph" + String(i))
+          .attr("y", function(b) { return 0; })
+          .attr("x", x(b[b.length - 1].year)+5)
+          .attr("text-anchor", "start")
+          .attr("dy", ".7em").append("a")
+          .style("fill", linecolors[i])
+          .attr("target","_blank")
+          //Append link to wikipedia page of country
+          .attr("href", "http://en.wikipedia.org/wiki/"+b.name)
+          .html(b.name)
+          .attr("class","linelabels");
 
         var thisFocus = linegraph.append("g")
         .attr("class", "focus")
@@ -144,18 +171,17 @@ function drawLinegraph(data, stats, selection, size, countries) {
     i+=1;
   }
 
-  d3.selectAll("path.linepath").moveToFront();
   //Append x&y-axis
   linegraph.append("g")
       .attr("class","axis")
       .attr("transform", "translate(0," + size.height + ")")
-    .call(d3.axisBottom(x)
-      .tickFormat(d3.timeFormat("%Y"))
-      );
+    .call(d3.axisBottom(x));
+
   linegraph.append("g").transition()
       .attr("class","axis")
     .call(d3.axisLeft(y));
 
+  // Crosshair
   svg.append("rect")
     .attr("transform", "translate(" + size.margin.left + "," + size.margin.top + ")")
     .attr("class", "lineOverlay")
@@ -180,54 +206,18 @@ function drawLinegraph(data, stats, selection, size, countries) {
       d0 = lineData[country][i - 1],
       d1 = lineData[country][i],
       d = x0 - d0.year > d1.year - x0 ? d1 : d0;
-      console.log(d.year);
       if(!(isNaN(y(d.value)))) {
+        focus[count].style("display",null);
         focus[count].attr("transform", "translate(" + x(d.year) + "," + y(d.value) + ")");
-        focus[count].select("text").text(function() { return d.value; });
-        focus[count].select(".x-hover-line").attr("y2", size.height - y(d.value));
-        focus[count].select(".y-hover-line").attr("x2", size.width + size.width);
+        focus[count].select("text").text(function() { return d.name + ": " + Math.round(d.value*100)/100; });
+        focus[count].select("text").style("color", function(count) { return linecolors[count]; });
+      } else {
+        focus[count].style("display","none");
       }
       selection.year = d.year;
       d3.select("#yearDisplay").html("Year: " + d.year);
-      drawWorld(stats, countries, data, selection, size)
+      drawWorld(stats, countries, mapData, selection, size, data)
       count += 1;
     }
-
   }
-
-  var svg = linegraph.append("svg")
-    .attr("width", (size.width / 100) * 10)
-    .attr("height", (size.heigth / 100) * 10);
-
-  var text = svg.append("g")
-    .attr("transform", "translate(400, 30)")
-    .append("text")
-    .style("alignment-baseline", "hanging")
-    .style("user-select", "none")
-    .style("font-size", "100%")
-    .style("fill", "black")
-  var callback = function() {
-    text.text(Date.now())
-  }
-
-  var btn = button()
-    .x(100) // X Location
-    .y(2000) // Y Location
-    .labels(["First label", "Second label"]) // Array of round-robin labels
-    .callback(callback) // User callback on click
-    .fontSize(10) // Font Size
-    .color("lightgrey") // Button text color
-    .fill("white") // Button fill
-    .fillHighlight("red") // Button fill when highlighted
-    .opacity(0.8) // Opacity
-  svg.call(btn);
-
-}
-
-
-//Bring an element to the front
-d3.selection.prototype.moveToFront = function() {
-  return this.each(function(){
-    this.parentNode.appendChild(this);
-  });
 }

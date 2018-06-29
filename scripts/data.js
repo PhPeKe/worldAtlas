@@ -1,17 +1,13 @@
 function aggregateData(allData) {
 
+
   var iso = allData[0];
   var countries = allData[1];
-  var gdp = allData[2];
-  var le = allData[3];
-  var arms_pers = allData[4];
-  var arms_exp = allData[5];
-  var arms_imp = allData[6];
-  var mil_exp = allData[7];
-  data = {};
+  var data = {};
 
 
-  var names = ["iso","countries","gdp_pc","life_exp","arms_pers","arms_exp","arms_imp","mil_exp"];
+
+
 
   //Prepare data by giving the appropriate numeric iso-codes
   allData.slice(2).forEach(function(dataset) {
@@ -40,21 +36,9 @@ function aggregateData(allData) {
 
           for(var key in entry) {
             if(key[0] == "1" || key[0] =="2") {
-              // Save values in list
-              /*
-              var obj = {};
-              obj["year"] = key;
-              if(entry[key] == "..") obj["value"] = NaN;
-              else {
-                obj["value"] = +entry[key].replace(",",".");
-              }
-              data[country.id][series]["values"].push(obj);
-              */
               // Save values in object
-
               if(entry[key] == "..") data[country.id].series[series]["values"][key] = NaN;
               else data[country.id].series[series]["values"][key] = +entry[key].replace(",",".");
-
             }
           }
         }
@@ -66,17 +50,11 @@ function aggregateData(allData) {
 }
 
 
-function log(object, message) {
-  console.log(message);
-  console.log(object);
-}
-
-
 function getDomain(data, selection) {
   // Workaround for the domainlist
   var domainList = [];
   for(key in data) {
-    if (isNaN(data[key].series[selection.series].values[selection.year]) == false)domainList.push(data[key].series[selection.series].values[selection.year]);
+    if (isNaN(data[key].series[selection.map].values[selection.year]) == false)domainList.push(data[key].series[selection.map].values[selection.year]);
   };
 
   var domain = d3.extent(domainList, function(d){return d; });//return d[selection.series][selection.year]});
@@ -223,7 +201,6 @@ function getStats(data) {
 
   // Get z-scores per country per series (z = (x – mean) / var)
   // Get z-scores per series (z = (x – μ) / σ)
-  // What is a z-score? - http://www.statisticshowto.com/probability-and-statistics/z-score/
   for(country in data) {
     for(series in data[country].series) {
       for(year in data[country].series[series].values) {

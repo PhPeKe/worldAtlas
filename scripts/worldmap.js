@@ -3,19 +3,19 @@ function prepareWorld(size, tip) {
   // Prepare map
   var map = d3.select("div.map")
   .append("svg")
+  .attr("class","map")
   .attr("width", size.width + size.margin.left + size.margin.right)
   .attr("height", size.height + size.margin.bottom + size.margin.top)
   .append('g')
     .attr('class', 'map')
     //.attr("transform", "translate(" + (size.margin.left ) + "," + size.margin.top + ")")
   .call(d3.zoom()
-    .scaleExtent([1,Infinity])
+    .scaleExtent([0.5,Infinity])
     .translateExtent([[0,0],[size.width, size.height]])
     .extent([[0,0],[size.width, size.height]])
   .on("zoom",  function () {
     map.attr("transform", d3.event.transform);
   }));
-  console.log(size.height/size.width);
 
   // Set projection for map
   var projection = d3.geoMercator()
@@ -29,22 +29,22 @@ function prepareWorld(size, tip) {
 }
 
 
-function drawWorld(stats, countries, data, selection, size) {
+function drawWorld(stats, countries, mapData, selection, size, data) {
 
   d3.selectAll("div.map svg").remove();
-
-  var domain = getDomain(data, selection);
+  var mapSelection = "battle_death";
+  var domain = getDomain(mapData, selection);
   // Set function that is returning color appropriate to value
   var color = d3.scaleLinear()
     .domain(domain)
-    .range(['#00ff00','#0000ff']);
+    .range(['#00ff00','#ff0000']);
 
   setCurrentSize(size);
   size.margin = {top: size.height / 20, right: size.width / 15, bottom: size.height / 20, left: size.width/20},
   size.width = ((size.width / 100) * 50) - size.margin.left - size.margin.right,
   size.height = ((size.height / 100) * 40) - size.margin.bottom - size.margin.top;
 
-  var tip = makeTooltip(selection);
+  var tip = makeTooltip(selection, mapData);
   var world = prepareWorld(size, tip);
   var map = world[0];
   var path = world[1];
@@ -56,18 +56,19 @@ function drawWorld(stats, countries, data, selection, size) {
       .data(countries)
     .enter().append("path")
       .attr("d", path)
-      .attr("selected","false")
+      .attr("selected", "false")
       .attr("class","country")
       .attr("id", function(d) { return d.id; })
       .style("fill", function(d) {
-        return color(data[d.id].series[selection.series].values[selection.year]);
+        return color(mapData[d.id].series[selection.map].values[selection.year]);
       })
       .style('stroke', 'white')
       .style('stroke-width', 0.3)
-      .style("opacity",0.8);
-
-      // Listeners
-      graph.on('mouseover',function(d){
+      .style("opacity", function(d) {
+        if(d3.select(this).attr("selected") == true) return 1;
+        else return 0.6;
+      })
+      .on('mouseover',function(d){
         tip.show(d);
 
         d3.select(this).transition().ease(d3.easeElastic)
@@ -79,14 +80,13 @@ function drawWorld(stats, countries, data, selection, size) {
         tip.hide(d);
 
         d3.select(this).transition().ease(d3.easeElastic)
-          .style("opacity", 0.8)
+          .style("opacity", 0.6)
           .style("stroke","white")
           .style("stroke-width",0.3);
       })
       .on("click", function(d) {
         if(selection.countries == "world") selection.countries = [];
-
-// Later: Change borders when selected
+        console.log(d.id);
         if(d3.select(this).attr("selected") == "false") {
           d3.select(this).attr("selected", "true");
         }
@@ -105,8 +105,10 @@ function drawWorld(stats, countries, data, selection, size) {
             selection.countries.splice(index,1);
           }
           if(selection.countries.length == 0) selection.countries = ["world"];
+          if(selection.countries.length > 4) selection.countries = selection.countries.splice(1);
           setCurrentSize(size);
-          drawLinegraph(data, stats, selection, size, countries);
+          drawWorld(stats, countries, mapData, selection, size, data);
+          drawLinegraph(data, stats, selection, size, countries, mapData);
           drawStackedBarchart(data, stats, selection, size, countries);
         }
         });
@@ -116,4 +118,8 @@ function drawWorld(stats, countries, data, selection, size) {
        // .datum(topojson.mesh(data.features, function(a, b) { return a !== b; }))
       .attr("class", "names")
       .attr("d", path)
+}
+
+function updateWorld(graph, data) {
+
 }
