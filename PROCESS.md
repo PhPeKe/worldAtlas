@@ -122,3 +122,18 @@ Aggregate data
 # 27-06
 - Loading in new datasets for worldmap
 - Choosing for data worldmap by clicking on icons
+
+# 28-06
+- Restructuring:
+  - Change linegraph to display series and not countries
+  - Clicking on bars selects world
+  - clicking on world selects barchart data
+  - Appending list
+  - Get rid of old buttons
+- Added resize function so that the layout doesnt change when windowsize is adjusted
+
+# 29-06
+- Added loading animation that disappears when all graphs have been loaded
+- Loads of styling, putting objects in the right position
+- Cleaned up repository
+- Cleaned up code, added comments

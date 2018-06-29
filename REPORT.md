@@ -65,5 +65,11 @@ and on a averaged level(barchart).
 
 - *Charts*
   - Stacked bargraph instead of marimekko
+
       These two charts are almost the same with behalf on one extra dimension: the column width. It would have been possible to implement this given my data but i chose to use the stacked barchart because otherwise the visualisations could have gotten too complex.
+
   - Linegraph instead of scatterplot
+
+      I tested the correlations between the variables and it didnt look nice, also i already had a cross-sectional(worldmap) and an average(barchart) visualization of the data. So the only thing missing was a longitudinal value that shows the development of series and offered an intuitive way of changing the years on the worldmap.
+
+  - 
