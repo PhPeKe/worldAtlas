@@ -65,7 +65,7 @@ function drawWorld(stats, countries, selection, size, data) {
       .style('stroke-width', 0.3)
       .style("opacity", function(d) {
         if(d3.select(this).attr("selected") == true) return 1;
-        else return 0.6;
+        else return 0.8;
       })
       .on('mouseover',function(d){
         tip.show(d);
@@ -79,13 +79,12 @@ function drawWorld(stats, countries, selection, size, data) {
         tip.hide(d);
 
         d3.select(this).transition().ease(d3.easeElastic)
-          .style("opacity", 0.6)
+          .style("opacity", 0.8)
           .style("stroke","white")
           .style("stroke-width",0.3);
       })
       .on("click", function(d) {
         if(selection.countries == "world") selection.countries = [];
-        console.log(d.id);
         if(d3.select(this).attr("selected") == "false") {
           d3.select(this).attr("selected", "true");
         }
@@ -110,6 +109,7 @@ function drawWorld(stats, countries, selection, size, data) {
           drawWorld(stats, countries, selection, size, data);
           drawLinegraph(data, stats, selection, size, countries);
           drawStackedBarchart(data, stats, selection, size, countries);
+          d3.select("h1#countryDisplay").html("Selected: " + data[selection.countries[selection.countries.length-1]].name)
         }
         });
 

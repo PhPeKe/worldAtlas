@@ -22,13 +22,13 @@ function drawStackedBarchart(data, stats, selection, size, countries) {
   d3.selectAll(".d3-tip.bartext").remove();
   d3.selectAll(".d3-tip.bartext.n").remove();
 
-  var barLabelTip = d3.tip()
-              .attr('class', 'd3-tip barText')
-              .offset([-10, 0])
-              .html(function(d) {
-                if(d in data["004"].series) return data["004"].series[d].series;
-                else return "d";
-              });
+    var barLabelTip = d3.tip()
+                .attr('class', 'd3-tip barText')
+                .offset([-10, 0])
+                .html(function(d) {
+                  if(d in data["004"].series) return data["004"].series[d].series;
+                  else return "";
+                });
 
   var barchart = makeStackedBarchart(size);
   var barData = getBarData(data, stats, selection);
@@ -92,7 +92,7 @@ function drawStackedBarchart(data, stats, selection, size, countries) {
         if(d.data.series == selection.series) return 1;
         else return 0.8;
       })
-      .on("mouseover", function() {
+      .on("mouseover", function(d) {
         d3.select(this).transition()
           .style("opacity", 1);
       })

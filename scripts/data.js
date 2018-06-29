@@ -260,7 +260,7 @@ function getLineData(data, stats, selection) {
       if(isNaN(data[selection.countries[selection.countries.length - 1]].series[series].zscores[year])) object.value = undefined;
       else object.value = data[selection.countries[selection.countries.length - 1]].series[series].zscores[year];
       object.seriesName = data["004"].series[selection.series].series;
-      object.name = data["004"].series[selection.series].series;
+      object.name = data[selection.countries[selection.countries.length - 1]].name;
       otherObject[series].push(object);
     }
     lineData[series] = otherObject[series];
