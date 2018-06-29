@@ -33,11 +33,11 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
   var linecolors = ["#1b9e77","#7570b3","#e6ab02"];
   var lineText = {};
   lineText.names = {"gdp_pc": "GDP per capita",
-                        "mil_exp" : "Military expenditure",
-                        "life_exp" : "Life expectancy"};
+                    "mil_exp" : "Military expenditure",
+                    "life_exp" : "Life expectancy"};
   lineText.suffix = {"gdp_pc": " US$",
-                        "mil_exp" : " % of GDP",
-                        "life_exp" : " years"};
+                     "mil_exp" : " % of GDP",
+                     "life_exp" : " years"};
   let temp = makeLinegraph(size);
   var linegraph = temp[1];
   var svg = temp[0];

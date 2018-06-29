@@ -11,7 +11,7 @@
 
 h1#countryDisplay {
   position: relative;
-  left: 5%;
+  left: 35%;
 }
 
 
@@ -115,7 +115,7 @@ div.info, div.controls{
 h1#yearDisplay {
   position: absolute;
   width: 40%;
-  left: 1%;
+  left: 15%;
 }
 
 div.map {
