@@ -17,7 +17,11 @@ function makeLinegraph(size) {
   return [svg,g];
 }
 
+/*drawLinegraph.js
 
+  - Draws linegraph given the selection
+
+*/
 function drawLinegraph(data, stats, selection, size, countries, mapData) {
 
   // 8.1. Reset and adjust size before drawing
@@ -36,6 +40,7 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
   // 8.3. Set variables
   var linecolors = ["#1b9e77","#7570b3","#e6ab02"];
   var lineText = {};
+
   // Linetext and suffix for static tooltip
   lineText.names = {"gdp_pc": "GDP per capita",
                     "mil_exp" : "Military expenditure",
@@ -47,6 +52,7 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
   var linegraph = temp[1];
   var svg = temp[0];
   var bisectDate = d3.bisector(function(d) { return d.year; }).left;
+  var domainList = [];
 
   // 8.4. Get data for drawing linegraph
   var lineData = getLineData(data, stats, selection);
@@ -61,12 +67,10 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
     .x(function(d) { return x(d.year);})
     .y(function(d) { return y(d.value);});
 
-  var domainList = [];
-
   // Remove old list
   d3.select(".lineList").remove();
 
-
+  // Get country names
   var entries = [];
   for(country in selection.countries) {
     if(selection.countries[country] == "world") {
@@ -82,6 +86,7 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
     .append("ul")
     .attr("class","lineList");
 
+  // Append list elements for selection
   list.selectAll('li')
     .data(entries)
       .enter()
@@ -89,8 +94,8 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
     .append("a")
       .attr("class", "listText")
       .attr("target","_blank")
-      //Append link to wikipedia page of country
       .attr("href", function(d) {
+        //Append link to wikipedia page of country
         return "http://en.wikipedia.org/wiki/" + d;
       })
       .html(String)
@@ -112,11 +117,11 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
   var focus = [];
   for(entry in lineData) {
     var b = lineData[entry];
+
     //Append path i times
     linegraph.append("path")
       .datum(b)
         .attr("class","linepath")
-        //.attr("id", i)
         .attr("fill", "none")
         .attr("id", function(d) { return d.iso;})
         .style("cursor","pointer")
@@ -154,7 +159,7 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
       .attr("class","axis")
     .call(d3.axisLeft(y));
 
-  // Crosshair
+  // 8.8. Crosshair
   svg.append("rect")
     .attr("transform", "translate(" + size.margin.left + "," + size.margin.top + ")")
     .attr("class", "lineOverlay")
@@ -170,15 +175,21 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
       })
     .on("mousemove", mousemove);
 
+  // Function for mousemove
   function mousemove() {
     var list = [];
     var count = 0;
+
+    // Iterate through all series
     for(series in lineData) {
+      // Bisect data to chose when in between points
       var x0 = x.invert(d3.mouse(this)[0]),
       i = bisectDate(lineData[series], x0, 1),
       d0 = lineData[series][i - 1],
       d1 = lineData[series][i],
       d = x0 - d0.year > d1.year - x0 ? d1 : d0;
+
+      // Dont show focus when data is NaN
       if(!(isNaN(y(d.value)))) {
         focus[count].style("display",null);
         focus[count].attr("transform", "translate(" + x(d.year) + "," + y(d.value) + ")");
@@ -187,6 +198,8 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
       } else {
         focus[count].style("display","none");
       }
+
+      // Set text for static tooltip
       d3.select("li#"+series).html(function(){
         if(selection.countries == "world") return lineText.names[series]
                                           + " in World (" + d.year + "): "
@@ -199,8 +212,12 @@ function drawLinegraph(data, stats, selection, size, countries, mapData) {
                   + Math.round(data[selection.countries[selection.countries.length-1]].series[series].values[d.year]*100)/100
                   + lineText.suffix[series];
       });
+
+      // Change selection.year when mouse is moved
       selection.year = d.year;
       d3.select("#yearDisplay").html("Year: " + d.year);
+
+      // Draw world with different year
       drawWorld(stats, countries, selection, size, data)
       count += 1;
     }

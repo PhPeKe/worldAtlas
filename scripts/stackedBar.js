@@ -2,6 +2,7 @@
 
   Phillip Kersten 10880682
   Prepare and draw stacked barchart
+
 */
 function makeStackedBarchart(size) {
   // Append svg
@@ -15,19 +16,25 @@ function makeStackedBarchart(size) {
   return svg;
 }
 
+/*drawStackedBarchart.js
 
+  Prepare and draw stacke barchart
+
+*/
 function drawStackedBarchart(data, stats, selection, size, countries) {
 
+  // 9.1. Remove old elements
+  d3.selectAll(".d3-tip.bartext").remove();
+  d3.selectAll(".d3-tip.bartext.n").remove();
+  d3.selectAll("d3-tip barText").remove();
+
+  // 9.2. Set current size
   setCurrentSize(size);
   size.margin = {top: size.height / 20, right: size.width / 20, bottom: size.height / 20, left: size.width/20},
   size.width = ((size.width/100)*45) - size.margin.left - size.margin.right,
   size.height = ((size.height/100)*45) - size.margin.bottom - size.margin.top;
 
-  d3.selectAll(".d3-tip.bartext").remove();
-  d3.selectAll(".d3-tip.bartext.n").remove();
-
-  d3.selectAll("d3-tip barText").remove();
-
+  // Prepare tooltip
   var barLabelTip = d3.tip()
               .attr('class', 'd3-tip barText')
               .offset([-10, 0])
@@ -36,41 +43,50 @@ function drawStackedBarchart(data, stats, selection, size, countries) {
                 else return "";
               });
 
+  // 9.3. Prepare barchart get data
   var barchart = makeStackedBarchart(size);
   var barData = getBarData(data, stats, selection);
   var g = barchart.append("g").attr("class", "barchart").attr("transform", "translate(" + size.margin.left + "," + size.margin.top + ")");
 
+  // Get all series in a list
   var series = []
   for(seriesName in stats) {
     series.push(seriesName);
   }
 
+  // Prepare x,y axis
   var y = d3.scaleLinear()
       .rangeRound([size.height, 0])
   		.nice();
-
   var x = d3.scaleBand()
       .rangeRound([0, size.width])
       .paddingInner(0.05)
       .align(0.1);
 
+  // Set color scheme
   var z = d3.scaleOrdinal()
       .range(["#1f78b4","#33a02c","#e31a1c","#ff7f00","#6a3d9a",
               "#a6cee3","#b2df8a","#fb9a99","#fdbf6f","#cab2d6"]);
 
+  // Initialie stack
   var stack = d3.stack()
       .offset(d3.stackOffsetExpand);
 
+  // 9.4. Set domain
   x.domain(barData.map(function(d) {return d.series}));
   z.domain(selection.countries);
+
+  // Aggregate bardata
   barData.sort(function(a, b) { return b[series[0]] / b.total - a[series[0]] / a.total; });
 
+  // Append dataseries
   var series = g.selectAll("series")
     .data(stack.keys(selection.countries)(barData))
     .enter().append("g")
     .attr("class","barchart")
     .attr("fill", function(d) { return z(d.key);});
 
+  // 9.5. Append rect Append rect for each country per series
   series.selectAll("rect")
     .data(function(d) { return d;})
     .enter().append("rect")
@@ -116,6 +132,7 @@ function drawStackedBarchart(data, stats, selection, size, countries) {
       .attr("class", "barchart")
       .call(d3.axisLeft(y).ticks(10, "%"));
 
+  // 9.5. Append legend
   var legend = series.append("g")
       .attr("class", "legend")
       .attr("transform", function(d) {
@@ -145,13 +162,11 @@ function drawStackedBarchart(data, stats, selection, size, countries) {
       .on("mouseover", function(d) { barLabelTip.show(d); })
       .on("mouseout", function(d) { barLabelTip.hide(d); });
 
-  setCurrentSize(size);
   legend.call(barLabelTip);
   // Remove overlay when loading is done
   d3.selectAll("div#overlay").remove();
   var rect = d3.selectAll("#barchart svg g g rect");
   rect.on("click", function(d) {
-    console.log(d3.select(this).attr("id"));
     selection.series = d3.select(this).attr("id");
 
     d3.selectAll("#barchart svg g g rect")
@@ -162,7 +177,7 @@ function drawStackedBarchart(data, stats, selection, size, countries) {
       .style("opacity", 1)
       .attr("selected", "true");
 
-
+    // Set size and redraw with current selection
     setCurrentSize(size);
     drawWorld(stats, countries, selection, size, data);
     drawLinegraph(data, stats, selection, size, countries);

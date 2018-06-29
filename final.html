@@ -7,7 +7,6 @@
   <meta charset="UTF-8">
   <link rel="stylesheet" type="text/css" href="style/style.css"</link>
   <link rel="stylesheet" type="text/css" href="style/bootstrap.css"</link>
-  <link rel="stylesheet" type="text/css" href="style/switch.css"</link>
   <script src="scripts/d3/d3.v4.min.js"></script>
   <script src="scripts/d3/d3-geo-projection.v2.min.js"></script>
   <script src="scripts/d3/d3-array.v1.min.js"></script>
@@ -15,10 +14,8 @@
   <script src="scripts/d3/jquery-latest.min.js"></script>
   <script src="scripts/d3/queue.v1.min.js"></script>
   <script src="scripts/d3/topojson.v1.min.js"></script>
-  <script src="scripts/d3/d3-simple-slider.js"></script>
   <script src="scripts/d3/d3-tip.js"></script>
   <script src="scripts/d3/d3CheckBox.js"></script>
-  <script src="scripts/d3/button.js"></script>
   <script src="scripts/d3/bootstrap.min.js"></script>
   <script src="scripts/worldmap.js" charset="utf-8"></script>
   <script src="scripts/stackedBar.js" charset="utf-8"></script>
@@ -28,29 +25,23 @@
   <script src="scripts/data.js" charset="utf-8"></script>
   <script src="scripts/main.js" charset="utf-8"></script>
 </head>
-<body>
-  <div id="frame">
-    <div id="overlay" position="absolute">
-      <svg class="overlay" fill="white" style="background-image:url('doc/loading.gif'); background-repeat: no-repeat; background-position: center; ">
-      </svg>
+  <body>
+    <div id="frame">
+      <div id="overlay" position="absolute">
+        <svg class="overlay" fill="white" style="background-image:url('doc/loading.gif'); background-repeat: no-repeat; background-position: center; ">
+        </svg>
+      </div>
+      <div class="title"></div>
+      <div class="map">
+        <h1 id="yearDisplay" style='visibility: hidden'>Year: 1960</h1>
+      </div>
+      <div id="linegraph" class="linegraph">
+        <h1 id="countryDisplay" style='visibility: hidden'>Selected: World</h1>
+      </div>
+      <div id="list"></div>
+      <div id="barchart"></div>
+      <div id="valuesLine" style='visibility: hidden'><ul><li id="gdp_pc">GDP per capita:</li><li id="life_exp">Life Expectancy:</li><li id="mil_exp">Military expenditure:</li></ul></div>
+      <div id="text" z-index="-2"></div>
     </div>
-    <div class="title"></div>
-  <div class="map">
-    <h1 id="yearDisplay" style='visibility: hidden'>Year: 1960</h1>
-  </div>
-  <div class="button">
-    <label class="switch">
-      <input type="checkbox" class="mode" checked="true">
-      <span class="slider round"></span>
-    </label>
-  </div>
-  <div id="linegraph" class="linegraph">
-    <h1 id="countryDisplay" style='visibility: hidden'>Selected: World</h1>
-  </div>
-  <div id="list"></div>
-  <div id="barchart"></div>
-  <div id="valuesLine" style='visibility: hidden'><ul><li id="gdp_pc">GDP per capita:</li><li id="life_exp">Life Expectancy:</li><li id="mil_exp">Military expenditure:</li></ul></div>
-  <div id="text" z-index="-2"></div>
-  </div>
-</body>
+  </body>
 </html>

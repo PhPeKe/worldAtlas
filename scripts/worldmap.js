@@ -3,7 +3,6 @@
 
   Prepare and draw worldmap
 
-  Follow the GUIDE for a step-by-step walk through the code
 */
 function prepareWorld(size, tip) {
 
@@ -15,7 +14,6 @@ function prepareWorld(size, tip) {
   .attr("height", size.height + size.margin.bottom + size.margin.top)
   .append('g')
     .attr('class', 'map')
-    //.attr("transform", "translate(" + (size.margin.left ) + "," + size.margin.top + ")")
   .call(d3.zoom()
     .scaleExtent([0.5,Infinity])
     .translateExtent([[0,0],[size.width, size.height]])
@@ -26,7 +24,7 @@ function prepareWorld(size, tip) {
 
   // Set projection for map
   var projection = d3.geoMercator()
-    .scale(90)//((size.width - size.margin.left - size.margin.right)/size.height)*50)
+    .scale(90)
     .translate( [size.width / 1.7, size.height / 1.3]);
 
   // Set path for map

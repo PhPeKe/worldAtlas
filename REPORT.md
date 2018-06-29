@@ -133,4 +133,10 @@ I chose for the linegraph instead of the scatterplot because it makes the design
   5. Prepare scale, line
   6. Create list with links to wikipedia page of selected countries
   7. Draw lines
+  8. Create crosshair for linegraph
 9. Draw Barchart
+  1. Rmove old elements
+  2. set size
+  3. Prepare barchart, get data
+  4. Set domain
+  5. legend

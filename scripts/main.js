@@ -1,6 +1,10 @@
 /*main.js
   Phillip Kersten 10880682
   Main control-flow for the project
+
+  Follow the GUIDE for a step-by-step walk through the code:
+    Use the list at the end of report.md for an overview
+    
 */
 window.onload = function() {
 
@@ -79,11 +83,12 @@ window.onload = function() {
     // 5. Get statistics and z-scores for all entrys GUIDE: go to data.js line
     var stats = getStats(data);
 
-    // 6. Draw visualizations GUIDE: go to worldmap.js line 38
+    // 6. Draw visualizations
+    // 7. Draw world GUIDE: go to worldmap.js line 38
     drawWorld(stats, countries, selection, size, data);
     // 8. Draw Linegraph GUIDE: go to linegraph.js line 21
     drawLinegraph(data, stats, selection, size, countries);
-    // 9. DrawBarchart
+    // 9. Draw Barchart GUIDE: go to drawStackedBarchart.js line
     drawStackedBarchart(data, stats, selection, size, countries);
     // Append text when everything is ready
     appendText(size);
