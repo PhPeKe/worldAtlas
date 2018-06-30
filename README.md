@@ -1,7 +1,11 @@
 # World Atlas
 *Phillip Kersten*
 
-[Github pages](https:phpeke.github.io/worldAtlas/final.html)
+[Github pages](phpeke.github.io/worldAtlas/final.html)
+
+Video:
+
+https://vimeo.com/277771405
 
 This project is aiming to show the difference between countries and groups of countries with respect to multiple variables concerning development, politics and conflict.
 It is also possible to correlate different variables within a country or group countries and variables.
